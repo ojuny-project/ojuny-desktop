@@ -159,7 +159,7 @@ in
       gesturebind = mkOption {
         type = bindGroup;
         default = mangoDefaults.gesturebind;
-        description = "Touch gesture bindings, grouped by mode then by name.";
+        description = "Trackpad gesture bindings, grouped by mode then by name.";
       };
     };
 

@@ -271,7 +271,7 @@ See `lib/defaults/mango.nix` for the full default bind tree (many modes/entries)
 ## `desktop.ojuny.mango.gesturebind`
 
 - type: attrsOf (attrsOf attrsOf bind), default: large nested set
-- description: Touch gesture bindings, grouped by mode then by name.
+- description: Trackpad gesture bindings, grouped by mode then by name.
 
 ### Structure
 
