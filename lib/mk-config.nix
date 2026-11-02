@@ -118,6 +118,10 @@ let
           name = "gesturebind";
           value = bindsLib.toBindTables mango.gesturebind;
         }
+        ++ lib.optional (mango.switchbind or { } != { }) {
+          name = "switchbind";
+          value = mango.switchbind;
+        }
         ++ lib.optional (rules != { }) { name = "rule"; value = rules; };
     in
     {

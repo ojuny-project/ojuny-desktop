@@ -28,6 +28,7 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 - desktop.ojuny.mango.mousebind (type: see defaults/schema)
 - desktop.ojuny.mango.rules (type: see defaults/schema)
 - desktop.ojuny.mango.source (type: see defaults/schema)
+- desktop.ojuny.mango.switchbind (type: see defaults/schema)
 - desktop.ojuny.mango.var (type: see defaults/schema)
 
 
@@ -288,6 +289,29 @@ desktop.ojuny.mango.gesturebind.<mode>.<name> = {
 ```
 
 See `lib/defaults/mango.nix` for the full default bind tree (many modes/entries).
+
+
+## `desktop.ojuny.mango.switchbind`
+
+- type: attrsOf TOML, default: {}
+- description: Switch bindings keyed by key mode, then by fold or unfold, with a dispatcher string such as `"spawn,command"`.
+
+### Structure
+
+```nix
+desktop.ojuny.mango.switchbind.default = {
+  fold = "spawn,/path/to/script fold";
+  unfold = "spawn,/path/to/script unfold";
+};
+```
+
+Rendered as:
+
+```toml
+[switchbind.default]
+fold = "spawn,/path/to/script fold"
+unfold = "spawn,/path/to/script unfold"
+```
 
 
 ## `desktop.ojuny.dux`

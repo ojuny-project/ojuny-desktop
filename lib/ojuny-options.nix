@@ -161,6 +161,11 @@ in
         default = mangoDefaults.gesturebind;
         description = "Trackpad gesture bindings, grouped by mode then by name.";
       };
+      switchbind = mkOption {
+        type = types.attrsOf types.toml;
+        default = { };
+        description = "Switch bindings keyed by key mode, then by fold or unfold, with a dispatcher string such as \"spawn,command\".";
+      };
     };
 
     dux = {

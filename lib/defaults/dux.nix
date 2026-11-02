@@ -236,15 +236,6 @@
         w = 1;
         _order = 20;
       };
-      settings = {
-        col = 5;
-        enabled = true;
-        h = 1;
-        row = 0;
-        small = true;
-        w = 1;
-        _order = 30;
-      };
       lock = {
         col = 6;
         enabled = true;
@@ -252,7 +243,7 @@
         row = 0;
         small = true;
         w = 1;
-        _order = 40;
+        _order = 30;
       };
       power = {
         col = 7;
@@ -261,7 +252,7 @@
         row = 0;
         small = true;
         w = 1;
-        _order = 50;
+        _order = 40;
       };
       brightnessSlider = {
         col = 0;
@@ -328,50 +319,55 @@
         w = 5;
         _order = 130;
       };
-      nightMode = {
+      quickTiles = {
         col = 0;
         enabled = true;
         h = 1;
+        instanceId = "quickTiles";
         row = 6;
         small = true;
-        w = 1;
+        w = 8;
         _order = 140;
       };
-      doNotDisturb = {
-        col = 1;
+      idleInhibitor = {
         enabled = true;
+        group = "quickTiles";
         h = 1;
-        row = 6;
         small = true;
         w = 1;
         _order = 150;
       };
-      idleInhibitor = {
-        col = 2;
+      nightMode = {
         enabled = true;
+        group = "quickTiles";
         h = 1;
-        row = 6;
-        small = true;
+        small = false;
         w = 1;
         _order = 160;
       };
-      runningApps = {
-        col = 3;
+      doNotDisturb = {
         enabled = true;
+        group = "quickTiles";
         h = 1;
-        row = 6;
-        small = true;
-        w = 4;
-        _order = 170;
-      };
-      edit = {
-        col = 7;
-        enabled = true;
-        h = 1;
-        row = 6;
         small = true;
         w = 1;
+        _order = 170;
+      };
+      runningApps = {
+        enabled = true;
+        group = "quickTiles";
+        h = 1;
+        small = true;
+        w = 4;
         _order = 180;
+      };
+      edit = {
+        enabled = false;
+        group = "quickTiles";
+        h = 1;
+        small = true;
+        w = 1;
+        _order = 190;
       };
     };
     dashCards = {
