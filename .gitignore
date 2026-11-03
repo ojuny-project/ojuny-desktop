@@ -10,3 +10,6 @@ result-*
 
 # ignore python cache
 .mypy_cache
+
+# Local working notes, not part of the published docs
+notes/

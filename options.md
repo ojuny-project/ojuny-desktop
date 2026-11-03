@@ -40,6 +40,7 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 ### Full global keys (from lib/defaults/mango.nix)
 
 - allow_lock_transparent
+- allow_shortcuts_inhibit
 - animation_duration_close
 - animation_duration_focus
 - animation_duration_move
@@ -191,7 +192,7 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 
 ## `desktop.ojuny.mango.env`
 
-- type: TOML, default: {"MOZ_ENABLE_WAYLAND": "1", "NIXOS_OZONE_WL": "1", "OZONE_PLATFORM": "wayland", "QT_QPA_PLATFORM": "wayland;xcb", "XDG_CURRENT_DESKTOP": "wlroots", "XDG_SESSION_DESKTOP": "wlroots"}
+- type: TOML, default: {"MOZ_ENABLE_WAYLAND": "1", "NIXOS_OZONE_WL": "1", "OZONE_PLATFORM": "wayland", "QT_QPA_PLATFORM": "wayland;xcb", "WLR_RENDERER_ALLOW_SOFTWARE": "1", "XDG_CURRENT_DESKTOP": "wlroots", "XDG_SESSION_DESKTOP": "wlroots"}
 - description: Mango [env] variables.
 
 
@@ -203,7 +204,7 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 
 ## `desktop.ojuny.mango.binds`
 
-- type: attrsOf (attrsOf attrsOf bind), default: large nested set
+- type: attrsOf (attrsOf bind), default: large nested set
 - description: Keybindings, grouped by key mode then by name.
 
 ### Structure
@@ -227,7 +228,7 @@ See `lib/defaults/mango.nix` for the full default bind tree (many modes/entries)
 
 ## `desktop.ojuny.mango.mousebind`
 
-- type: attrsOf (attrsOf attrsOf bind), default: large nested set
+- type: attrsOf (attrsOf bind), default: large nested set
 - description: Mouse button bindings, grouped by mode then by name.
 
 ### Structure
@@ -249,7 +250,7 @@ See `lib/defaults/mango.nix` for the full default bind tree (many modes/entries)
 
 ## `desktop.ojuny.mango.axisbind`
 
-- type: attrsOf (attrsOf attrsOf bind), default: large nested set
+- type: attrsOf (attrsOf bind), default: large nested set
 - description: Scroll-axis bindings, grouped by mode then by name.
 
 ### Structure
@@ -271,7 +272,7 @@ See `lib/defaults/mango.nix` for the full default bind tree (many modes/entries)
 
 ## `desktop.ojuny.mango.gesturebind`
 
-- type: attrsOf (attrsOf attrsOf bind), default: large nested set
+- type: attrsOf (attrsOf bind), default: large nested set
 - description: Trackpad gesture bindings, grouped by mode then by name.
 
 ### Structure
@@ -317,7 +318,10 @@ unfold = "spawn,/path/to/script unfold"
 ## `desktop.ojuny.dux`
 
 - `desktop.ojuny.dux.settings` (type: TOML) — Dux Shell settings (settings.json) scalar/attr keys. The collection keys are exposed through the convenience options below, which override the same keys here.
+- `desktop.ojuny.dux.session` (type: TOML, default: `{}`) — Dux Shell session (`session.json` seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.
 - `desktop.ojuny.dux.barConfigs` (type: attrsOf TOML, default per below) — Bar configurations keyed by id.
+- `desktop.ojuny.dux.barPreset` (enum, default: `default`) — Active bar preset: `caelestia`, `default`, `goth`, `none`, `sidebar-left`, `sidebar-right`, `simple-bar`, `simple-island`, `status`, `taskbar`, or `custom`. `custom` uses `barConfigs.custom`.
+- `desktop.ojuny.dux.barPresets` (type: attrsOf TOML, default: the bundled presets in `lib/defaults/bar-presets.nix`, internal) — Bar definitions keyed by preset id.
 - `desktop.ojuny.dux.dockConfigs` (type: attrsOf TOML, default per below) — Dock configurations keyed by id.
 - `desktop.ojuny.dux.controlCenterWidgets` (type: attrsOf TOML, default per below) — Control-center widgets keyed by id.
 - `desktop.ojuny.dux.dashCards` (type: attrsOf TOML, default per below) — Dashboard cards keyed by id.
@@ -974,6 +978,7 @@ desktop.ojuny.dux.plugins.<name> = {
 
 - `desktop.ojuny.dankMenu.enable` (type: bool, default: false) — Whether to use a Nix-managed dankMenu menu. The dankMenu plugin itself is enabled by default.
 - `desktop.ojuny.dankMenu.menu` (type: attrsOf, default: {}) — dankMenu tree keyed by dotted id (e.g. "learn.keybinds"). A non-empty tree overrides the plugin's bundled menu through the menuPath setting.
+- `desktop.ojuny.dankMenu.extraEntries` (type: attrsOf menu row, default: {}) — Menu entries added by patches and non-GUI modules, keyed by dotted id and using the same row shape as `menu`. Merged over `menu` with `lib.recursiveUpdate` when the menu JSON is generated; the settings editor only reads and writes `menu`, so a GUI save never removes an extra entry.
 - `desktop.ojuny.dankMenu.settings` (type: TOML, default: {}) — Additional dankMenu plugin settings merged into plugin_settings.json.
 
 ### Menu row structure
@@ -1018,7 +1023,7 @@ When `menu` is non-empty and `enable` is true, modules write a generated menu JS
 - Mango bind groups (`binds/mousebind/axisbind/gesturebind`): full default tree is in `lib/defaults/mango.nix`; structure is mode -> name -> bind fields as documented.
 - Rules: `desktop.ojuny.mango.rules` is a TOML-typed set; defaults include `tag_rule` and `window_rule` entries as shown.
 - Dux Shell settings: full defaults included above. Collection keys (`barConfigs`, `dockConfigs`, `controlCenterWidgets`, `dashCards`, `dashTabs`, `dashOptions`) are id-keyed attrsets rendered to arrays by `lib/mk-config.nix` (ordered by `_order`); the remaining keys live in `desktop.ojuny.dux.settings`. Clipboard defaults included above (`clsettings.json`). The generated settings fragment omits `configVersion`; Dux Shell treats an unversioned settings file as current.
-- Dux Shell session: generated `session.json` sets `configVersion = 7` and the wallpaper through `wallpaperPathLight` / `wallpaperPathDark`; `wallpaperPath` is no longer written.
+- Dux Shell session: generated `session.json` sets `configVersion = 7`, `wallpaperPath`, and `wallpaperPathLight` / `wallpaperPathDark` from the active wallpaper set.
 - Dux Shell plugins: attrs keyed by plugin name with `enable`, `src` (path/package), `settings` (merged into `plugin_settings.json`), `dir` (plugins/ subdirectory name) and `config` (extra file at `plugins/<dir>/config.json`, e.g. the `nixMonitor` command set).
 - dankMenu: structured menu rows + extra settings; when menu non-empty, `menuPath` is set automatically.
 - `desktop.ojuny.dms.*` is a renamed-option shim for `desktop.ojuny.dux.*`; it still evaluates with a warning and should not be used in new configuration.
