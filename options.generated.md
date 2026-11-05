@@ -10,7 +10,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 ## top level
 
 - `desktop.ojuny.defaultApps` (`list of package`, default `[ ]`): Packages added to the desktop session PATH (terminal, browser, file manager, etc.) so default keybinds can launch them.
-- `desktop.ojuny.enable` (`boolean`, default `false`): Whether to enable Ojuny Desktop (mangoWM + Dux Shell).
+- `desktop.ojuny.enable` (`boolean`, default `false`): Whether to enable Ojuny Desktop (mangoWM + Dux Modular Shell).
 
 ## dankMenu
 
@@ -45,21 +45,21 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 
 - `desktop.ojuny.dux.barConfigs` (`attribute set of (TOML value)`, default `{ default = { _order = 10; attachToScreenEdge = false; autoHide = false; autoHideDelay = 250; borderColor = "primary"; borderEnabled = false; borderOpacity = 1; borde…`): Bar configurations keyed by id. Each entry may set `_order` (int, default 1000) to control the generated array order.
 - `desktop.ojuny.dux.barPreset` (`one of "caelestia", "default", "goth", "none", "sidebar-left", "sidebar-right", "simple-bar", "simple-island", "status", "taskbar", "custom"`, default `"default"`): Active bar preset. `custom` uses `barConfigs.custom`, so a downstream repo can override it.
-- `desktop.ojuny.dux.clipboardSettings` (`TOML value`, default `{ autoClearDays = 1; clearAtStartup = true; disableHistory = false; disablePersist = false; disabled = false; maxEntrySize = 5242880; maxHistory = 25; }`): Dux Shell clipboard settings (clsettings.json).
+- `desktop.ojuny.dux.clipboardSettings` (`TOML value`, default `{ autoClearDays = 1; clearAtStartup = true; disableHistory = false; disablePersist = false; disabled = false; maxEntrySize = 5242880; maxHistory = 25; }`): Dux Modular Shell clipboard settings (clsettings.json).
 - `desktop.ojuny.dux.controlCenterWidgets` (`attribute set of (TOML value)`, default `{ battery = { _order = 20; col = 4; enabled = true; h = 1; row = 0; w = 1; }; bluetooth = { _order = 100; col = 3; enabled = true; h = 1; row = 2; …`): Control-center widgets keyed by id. Each entry may set `_order` (int, default 1000).
 - `desktop.ojuny.dux.dashCards` (`attribute set of (TOML value)`, default `{ calendar = { _order = 40; col = 0; h = 3; row = 1; w = 3; }; clock = { _order = 10; col = 2; h = 1; row = 0; w = 1; }; media = { _order = 50; …`): Dashboard cards keyed by id. Each entry may set `_order` (int, default 1000).
 - `desktop.ojuny.dux.dashOptions` (`TOML value`, default `{ calendar = { weekends = true; }; media = { playerStyle = "material"; }; weather = { widgets = { conditions = { _order = 10; city = false; col = 0;…`): Dashboard options. `weather.widgets` is an id-keyed attrset (with optional `_order`).
 - `desktop.ojuny.dux.dashTabs` (`attribute set of (TOML value)`, default `{ media = { _order = 20; enabled = true; }; notifications = { _order = 60; enabled = true; }; overview = { _order = 10; enabled = false; }; wallpaper = { _ord…`): Dashboard tabs keyed by id. Each entry may set `_order` (int, default 1000).
 - `desktop.ojuny.dux.dockConfigs` (`attribute set of (TOML value)`, default `{ dock = { _order = 10; autoHide = false; borderColor = "secondary"; borderEnabled = true; borderOpacity = 1; borderThickness = 1; bottomGap = 0; editOnRightClick = f…`): Dock configurations keyed by id. Each entry may set `_order` (int, default 1000). Nested `widgets` is itself an id-keyed attrset (with optional `_order`).
 - `desktop.ojuny.dux.managePluginSettings` (`boolean`, default `true`): Whether to generate plugin_settings.json from dux.plugins.
-- `desktop.ojuny.dux.plugins` (`attribute set of (submodule)`, default `{ }`): Dux Shell plugins, keyed by plugin name.
+- `desktop.ojuny.dux.plugins` (`attribute set of (submodule)`, default `{ }`): Dux Modular Shell plugins, keyed by plugin name.
 - `desktop.ojuny.dux.plugins.<name>.config` (`TOML value`, default `{ }`): Extra configuration written to plugins/<dir>/config.json inside the plugin directory. Empty means no config.json is written.
-- `desktop.ojuny.dux.plugins.<name>.dir` (`string`, default `""`): Directory name under plugins/ for this plugin's source. Empty means use the attribute key (the Dux Shell plugin id). Set only when the plugin expects a different directory name.
+- `desktop.ojuny.dux.plugins.<name>.dir` (`string`, default `""`): Directory name under plugins/ for this plugin's source. Empty means use the attribute key (the Dux Modular Shell plugin id). Set only when the plugin expects a different directory name.
 - `desktop.ojuny.dux.plugins.<name>.enable` (`boolean`, default `false`): Whether to install and enable this plugin.
 - `desktop.ojuny.dux.plugins.<name>.settings` (`TOML value`, default `{ }`): Plugin settings written to plugin_settings.json.
 - `desktop.ojuny.dux.plugins.<name>.src` (`package or absolute path`, default `no default`): Source directory or package of the plugin.
-- `desktop.ojuny.dux.session` (`TOML value`, default `{ }`): Dux Shell session (session.json seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.
-- `desktop.ojuny.dux.settings` (`TOML value`, default `{ animationDuration = 350; barElevationEnabled = false; builtInPluginSettings = { dms_clipboard_search = { trigger = "cb"; }; dms_power = { trigger = "pw"; }; dms…`): Dux Shell settings (settings.json). Use the convenience options below for the collection keys (barConfigs, dockConfigs, controlCenterWidgets, dashCards, dashTabs, dashOptions); they override the same keys here.
+- `desktop.ojuny.dux.session` (`TOML value`, default `{ }`): Dux Modular Shell session (session.json seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.
+- `desktop.ojuny.dux.settings` (`TOML value`, default `{ animationDuration = 350; barElevationEnabled = false; builtInPluginSettings = { dms_clipboard_search = { trigger = "cb"; }; dms_power = { trigger = "pw"; }; dms…`): Dux Modular Shell settings (settings.json). Use the convenience options below for the collection keys (barConfigs, dockConfigs, controlCenterWidgets, dashCards, dashTabs, dashOptions); they override the same keys here.
 
 ## fileManager
 
@@ -118,7 +118,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 
 ## wallpaper
 
-- `desktop.ojuny.wallpaper.cycleIncludeBuiltins` (`boolean`, default `true`): Include the generated bundled presets when Dux Shell cycles through wallpapers.
+- `desktop.ojuny.wallpaper.cycleIncludeBuiltins` (`boolean`, default `true`): Include the generated bundled presets when Dux Modular Shell cycles through wallpapers.
 - `desktop.ojuny.wallpaper.image` (`null or absolute path`, default `null`): Custom wallpaper image. When set, it overrides the selected preset and is used as-is.
 - `desktop.ojuny.wallpaper.preset` (`one of "abstract", "city", "everforest", "floyd", "logo", "retro", "stripes", "waves"`, default `"everforest"`): Bundled wallpaper preset. Every preset is generated with the active stylix palette.
 - `desktop.ojuny.wallpaper.userDirectory` (`null or absolute path`, default `null`): Directory of user wallpaper images to include in the generated wallpaper directory.

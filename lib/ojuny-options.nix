@@ -103,7 +103,7 @@ let
 in
 {
   options.desktop.ojuny = {
-    enable = mkEnableOption "Ojuny Desktop (mangoWM + Dux Shell)";
+    enable = mkEnableOption "Ojuny Desktop (mangoWM + Dux Modular Shell)";
 
     mango = {
       global = mkOption {
@@ -172,12 +172,12 @@ in
       settings = mkOption {
         type = types.toml;
         default = duxDefaults.settings;
-        description = "Dux Shell settings (settings.json). Use the convenience options below for the collection keys (barConfigs, dockConfigs, controlCenterWidgets, dashCards, dashTabs, dashOptions); they override the same keys here.";
+        description = "Dux Modular Shell settings (settings.json). Use the convenience options below for the collection keys (barConfigs, dockConfigs, controlCenterWidgets, dashCards, dashTabs, dashOptions); they override the same keys here.";
       };
       session = mkOption {
         type = types.toml;
         default = { };
-        description = "Dux Shell session (session.json seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.";
+        description = "Dux Modular Shell session (session.json seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.";
       };
       barConfigs = mkOption {
         type = types.attrsOf types.toml;
@@ -223,7 +223,7 @@ in
       clipboardSettings = mkOption {
         type = types.toml;
         default = duxClipboardDefaults;
-        description = "Dux Shell clipboard settings (clsettings.json).";
+        description = "Dux Modular Shell clipboard settings (clsettings.json).";
       };
       managePluginSettings = mkOption {
         type = types.bool;
@@ -250,7 +250,7 @@ in
             dir = mkOption {
               type = types.str;
               default = "";
-              description = "Directory name under plugins/ for this plugin's source. Empty means use the attribute key (the Dux Shell plugin id). Set only when the plugin expects a different directory name.";
+              description = "Directory name under plugins/ for this plugin's source. Empty means use the attribute key (the Dux Modular Shell plugin id). Set only when the plugin expects a different directory name.";
             };
             config = mkOption {
               type = types.toml;
@@ -260,7 +260,7 @@ in
           };
         });
         default = { };
-        description = "Dux Shell plugins, keyed by plugin name.";
+        description = "Dux Modular Shell plugins, keyed by plugin name.";
       };
     };
 
@@ -342,7 +342,7 @@ in
       cycleIncludeBuiltins = mkOption {
         type = types.bool;
         default = true;
-        description = "Include the generated bundled presets when Dux Shell cycles through wallpapers.";
+        description = "Include the generated bundled presets when Dux Modular Shell cycles through wallpapers.";
       };
       set = mkOption {
         type = types.nullOr types.package;
@@ -354,7 +354,7 @@ in
         type = types.str;
         default = "";
         internal = true;
-        description = "The generated directory Dux Shell reads and cycles through.";
+        description = "The generated directory Dux Modular Shell reads and cycles through.";
       };
       selected = mkOption {
         type = types.str;

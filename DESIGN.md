@@ -1,7 +1,7 @@
 # ojuny-desktop design
 
 ## Overview
-ojuny-desktop provides a wrapped desktop package and NixOS/Home Manager modules bundling pre-configured mangoWM + Dux Shell. It generates mango TOML and Dux Shell JSON from Nix options. Mango is launched with `-c` against `~/.config/mango/ojuny.toml`, a stable symlink into the store; the generated Dux Shell config tree is symlinked from the store into `~/.config/dms` so Dux Shell reads it from the normal config location and keeps writing its own output to `~/.config`.
+ojuny-desktop provides a wrapped desktop package and NixOS/Home Manager modules bundling pre-configured mangoWM + Dux Modular Shell. It generates mango TOML and Dux Modular Shell JSON from Nix options. Mango is launched with `-c` against `~/.config/mango/ojuny.toml`, a stable symlink into the store; the generated Dux Modular Shell config tree is symlinked from the store into `~/.config/dms` so Dux Modular Shell reads it from the normal config location and keeps writing its own output to `~/.config`.
 
 Based on dendrite's mango/dux configuration, using upstream `mangowm/mango` and `duxlabs-dev/dux-shell`. Excludes g13, noodle variants, and personal-specific configs.
 
@@ -10,7 +10,7 @@ All options live under `desktop.ojuny.*` and are shared across NixOS and Home Ma
 
 ## Configuration generation
 - Mango: TOML generated via custom `lib/to-toml.nix` from structured options (flattened `[global]` keys; binds, mousebinds, axisbinds, gesturebinds as tables; rules as arrays). Written to a store path and linked as `~/.config/mango/ojuny.toml`, which the wrapper passes via `mango -c`. The link sits beside any user-owned `config.toml`/`config.conf`; mango's watcher matches events by exact path, so only `ojuny.toml` changes trigger a reload.
-- Dux Shell: the settings are rendered into a `config.d/00-ojuny.json` fragment, alongside `clsettings.json` (clipboard), `cheatsheets/binds.json`, `plugin_settings.json` and plugin sources, in a store `dms` config tree. Each generated file is symlinked individually into `~/.config/dms`, which stays a real, writable directory so Dux Shell can create and update its own files there (`ojuny-config` user oneshot with `restartTriggers` on NixOS for all users, `home.file` plus an `ojuny-config --seed` user service on Home Manager); no `XDG_CONFIG_HOME` override. `lib/mk-ojuny.nix` returns the link map as `configLinks` and the tree as `duxConfigDir` (`ojuny-dux-config`).
+- Dux Modular Shell: the settings are rendered into a `config.d/00-ojuny.json` fragment, alongside `clsettings.json` (clipboard), `cheatsheets/binds.json`, `plugin_settings.json` and plugin sources, in a store `dms` config tree. Each generated file is symlinked individually into `~/.config/dms`, which stays a real, writable directory so Dux Modular Shell can create and update its own files there (`ojuny-config` user oneshot with `restartTriggers` on NixOS for all users, `home.file` plus an `ojuny-config --seed` user service on Home Manager); no `XDG_CONFIG_HOME` override. `lib/mk-ojuny.nix` returns the link map as `configLinks` and the tree as `duxConfigDir` (`ojuny-dux-config`).
 - Keybinds: single source of truth in `desktop.ojuny.mango.binds/*` and related bind groups; cheatsheet JSON is generated from them via `lib/to-binds.nix`, grouped by each bind's `group` with `subcat` as the inner category.
 
 ## Flake structure (dendritic)
@@ -20,8 +20,8 @@ All options live under `desktop.ojuny.*` and are shared across NixOS and Home Ma
 
 ### nixpkgs policy
 - `ojuny-desktop` carries its own `nixpkgs` input and every other input follows it (`dux-shell`, `dux-plugin-registry`, `dux-gop`, `dux-search`, `dux-calendar`, `dux-greeter`, `dux-files`, `mangowm`, `stylix`, `home-manager`).
-- Consumers keep their own `nixpkgs` for system modules, but leave `inputs.ojuny-desktop.inputs.nixpkgs` unfollowed so the Dux Shell stack builds against this flake's pin even when the consumer runs an older nixpkgs.
-- `quickshell` comes from this flake's nixpkgs as well, because Dux Shell 2.0 requires 0.3.0 or newer; the wrapper asserts the version.
+- Consumers keep their own `nixpkgs` for system modules, but leave `inputs.ojuny-desktop.inputs.nixpkgs` unfollowed so the Dux Modular Shell stack builds against this flake's pin even when the consumer runs an older nixpkgs.
+- `quickshell` comes from this flake's nixpkgs as well, because Dux Modular Shell 2.0 requires 0.3.0 or newer; the wrapper asserts the version.
 - No cross-repo lock syncing: each flake resolves one `nixpkgs` node through `inputs.nixpkgs.follows`, so a single `nix flake update nixpkgs` in the repo that owns the pin is the only bump.
 
 ## Option schema
@@ -29,7 +29,7 @@ All options live under `desktop.ojuny.*` and are shared across NixOS and Home Ma
 - `desktop.ojuny.mango.global` (TOML/attrs), `env`, `var`, `execOnce`, `exec`, `source`, `rules` (TOML), `binds`, `mousebind`, `axisbind`, `gesturebind` (bind groups)
 - `desktop.ojuny.mango.binds.<mode>.<name> = { modifier = [string]; keys = [string]; dispatcher = string; args = list|string; description = string; group = string; subcat = string; }` — `group` is the cheatsheet's top-level category (default `Other`), `subcat` sorts entries within it; `lib/to-binds.nix` reads both.
 - `desktop.ojuny.dux.settings` (TOML, settings.json), `clipboardSettings` (clsettings.json), `managePluginSettings` (bool)
-- `desktop.ojuny.dux.{barConfigs,dockConfigs,controlCenterWidgets,dashCards,dashTabs}` (attrsOf keyed by id) and `dashOptions` (TOML) — convenience options rendered to Dux Shell arrays by `lib/mk-config.nix`; per-entry `_order` controls array position
+- `desktop.ojuny.dux.{barConfigs,dockConfigs,controlCenterWidgets,dashCards,dashTabs}` (attrsOf keyed by id) and `dashOptions` (TOML) — convenience options rendered to Dux Modular Shell arrays by `lib/mk-config.nix`; per-entry `_order` controls array position
 - `desktop.ojuny.dux.plugins.<name> = { enable = bool; src = path/package; settings = TOML; }`
 - `desktop.ojuny.fileManager = { enable = bool; package = "dux-files"|"nautilus"|"custom"; customPackage; customCommand; portal = bool; }`
 - `desktop.ojuny.dankMenu.enable` (bool), `menu.<id>` (structured menu rows), `settings` (extra plugin settings)
@@ -46,20 +46,20 @@ All options live under `desktop.ojuny.*` and are shared across NixOS and Home Ma
 - `lib/ojuny-options.nix`: shared `desktop.ojuny.*` option definitions
 - `lib/mk-config.nix`: renders `mangoToml`, `duxJson`, `duxClipboardJson`, `cheatsheetJson`, `duxPluginSettingsJson` (with `dmsJson`-style aliases)
 - `lib/to-toml.nix`: custom ordered TOML renderer for mango schema
-- `lib/to-binds.nix`: converts bind groups to Dux Shell cheatsheet JSON and to TOML bind tables
+- `lib/to-binds.nix`: converts bind groups to Dux Modular Shell cheatsheet JSON and to TOML bind tables
 - `lib/mk-ojuny.nix`: builds `mangoConfigFile`, `duxConfigDir`, `configLinks`, `configLinker`, `duxWrapper` (installed as `dms`) from settings; symlinks enabled plugins
-- `lib/mk-linker.nix`: writes `ojuny-config`, which links `configLinks` into the user config directory, seeds `session.json` (also through `--seed`), touches the Dux Shell first-launch marker, and clears a stale `~/.config/DankMaterialShell` symlink without fighting the upstream `DankMaterialShell -> dms` migration
-- `lib/mk-mango-wrapper.nix`, `lib/mk-dux-wrapper.nix`: wrapper derivations (mango runs `ojuny-config --links-only` then gets the stable `-c` path; the Dux Shell wrapper seeds `session.json` on `dms run` before starting the shell, supplies the Dux Shell runtime PATH, and asserts quickshell >= 0.3.0)
+- `lib/mk-linker.nix`: writes `ojuny-config`, which links `configLinks` into the user config directory, seeds `session.json` (also through `--seed`), touches the Dux Modular Shell first-launch marker, and clears a stale `~/.config/DankMaterialShell` symlink without fighting the upstream `DankMaterialShell -> dms` migration
+- `lib/mk-mango-wrapper.nix`, `lib/mk-dux-wrapper.nix`: wrapper derivations (mango runs `ojuny-config --links-only` then gets the stable `-c` path; the Dux Modular Shell wrapper seeds `session.json` on `dms run` before starting the shell, supplies the Dux Modular Shell runtime PATH, and asserts quickshell >= 0.3.0)
 - `lib/file-manager.nix`: resolves the file manager package, desktop id, keybind command, MIME defaults, and portal flag
 - `lib/mk-ghostty-config.nix`: renders the ojuny Ghostty settings and base16 palette into a store config
 - `lib/mk-ghostty-wrapper.nix`: builds `ojuny-ghostty`, which loads the generated config before the user's Ghostty config so user values win
-- `lib/defaults/*.nix`: default mango/Dux Shell/clipboard/plugin values
+- `lib/defaults/*.nix`: default mango/Dux Modular Shell/clipboard/plugin values
 - `lib/mk-plugin-defaults.nix`: produces plain plugin defaults for the runner and `mkDefault`-wrapped defaults for the modules
 - `lib/dank-menu.nix`: serializes structured dankMenu tree to JSON (filters null/empty)
 - `lib/stylix-colors.nix`: maps stylix base16 colors to mango global color tokens
 
 ## Plugin registry
-Dux Shell plugin registry (`inputs.dux-plugin-registry`) is mapped into `desktop.ojuny.dux.plugins.<name>.src = mkDefault ...` for both HM and NixOS, allowing overrides. `lib/defaults/plugins.nix` enables `dankMenu`, `dankKDEConnect`, `nixMonitor`, `localServices`, `scratchpadHelper`, and `developerUtilities` with `mkDefault` because the default UI references them. Their runtime dependencies (`iproute2`, `kdePackages.kdeconnect-kde`) are part of the session PATH, with `kdeconnect` enabled as a user service on NixOS and Home Manager. The SFTP prerequisites are enabled alongside them: `services.gvfs`, `programs.ssh.startAgent` and the `SSH_AUTH_SOCK` export in `environment.d/50-ssh-agent.conf`, because Valent mounts the device under `/run/user/<uid>/gvfs` and runs `ssh-add`.
+Dux Modular Shell plugin registry (`inputs.dux-plugin-registry`) is mapped into `desktop.ojuny.dux.plugins.<name>.src = mkDefault ...` for both HM and NixOS, allowing overrides. `lib/defaults/plugins.nix` enables `dankMenu`, `dankKDEConnect`, `nixMonitor`, `localServices`, `scratchpadHelper`, and `developerUtilities` with `mkDefault` because the default UI references them. Their runtime dependencies (`iproute2`, `kdePackages.kdeconnect-kde`) are part of the session PATH, with `kdeconnect` enabled as a user service on NixOS and Home Manager. The SFTP prerequisites are enabled alongside them: `services.gvfs`, `programs.ssh.startAgent` and the `SSH_AUTH_SOCK` export in `environment.d/50-ssh-agent.conf`, because Valent mounts the device under `/run/user/<uid>/gvfs` and runs `ssh-add`.
 
 ## Nested runner (packages/desktop-runner)
 `packages.default` provides `ojuny-desktop` script that runs the wrapped session under `dbus-run-session` for a self-contained try-it experience with defaults. It uses temporary `XDG_CONFIG_HOME`, `XDG_STATE_HOME`, `XDG_CACHE_HOME`, and `XDG_DATA_HOME` directories, invokes the same `ojuny-config` linker as the modules, enables the shared plugin set, and places the generated Ghostty config in the temporary config home.
@@ -68,4 +68,4 @@ Dux Shell plugin registry (`inputs.dux-plugin-registry`) is mapped into `desktop
 Terminal binds and the startup terminal use `ojuny-ghostty`. The wrapper loads the generated config first, then the user's existing `$XDG_CONFIG_HOME/ghostty/config` and `config.ghostty`, with default file loading disabled. Because later files win, existing user settings are preserved. The raw `ghostty` binary is not replaced.
 
 ## What to exclude/port
-Exclude: g13, noodle variants, personal configurations. Use upstream mango and upstream Dux Shell. Port generically; no `~/.config` writes.
+Exclude: g13, noodle variants, personal configurations. Use upstream mango and upstream Dux Modular Shell. Port generically; no `~/.config` writes.

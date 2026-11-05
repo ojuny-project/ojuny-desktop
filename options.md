@@ -4,13 +4,13 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 
 ## Top level
 
-- `desktop.ojuny.enable` (bool, default: false) — Whether to enable Ojuny Desktop (mangoWM + Dux Shell).
+- `desktop.ojuny.enable` (bool, default: false) — Whether to enable Ojuny Desktop (mangoWM + Dux Modular Shell).
 - `desktop.ojuny.defaultApps` (listOf package, default: []) — Packages added to the desktop session PATH so default keybinds can launch them.
 - `desktop.ojuny.stylix.enable` (bool, default: false) — Theme mango from imported stylix palette (requires stylix module).
 - `desktop.ojuny.wallpaper.preset` (enum, default: `everforest`) — Bundled wallpaper preset: `everforest`, `floyd`, `stripes`, `waves`, `abstract`, `retro`, `logo`, `city`. Every preset is generated with the active stylix palette.
 - `desktop.ojuny.wallpaper.image` (path or null, default: null) — Custom wallpaper image. When set, it overrides the preset and is used as-is.
 - `desktop.ojuny.wallpaper.userDirectory` (path or null, default: null) — Directory of user wallpaper images copied into the generated wallpaper directory.
-- `desktop.ojuny.wallpaper.cycleIncludeBuiltins` (bool, default: true) — Include the generated bundled presets when Dux Shell cycles through wallpapers.
+- `desktop.ojuny.wallpaper.cycleIncludeBuiltins` (bool, default: true) — Include the generated bundled presets when Dux Modular Shell cycles through wallpapers.
 - `desktop.ojuny.fileManager.enable` (bool, default: true) — Install and wire the selected file manager.
 - `desktop.ojuny.fileManager.package` (enum, default: `dux-files`) — `dux-files`, `nautilus`, or `custom`.
 - `desktop.ojuny.fileManager.customPackage` (package or null, default: null) — Package installed when `package = "custom"`.
@@ -317,8 +317,8 @@ unfold = "spawn,/path/to/script unfold"
 
 ## `desktop.ojuny.dux`
 
-- `desktop.ojuny.dux.settings` (type: TOML) — Dux Shell settings (settings.json) scalar/attr keys. The collection keys are exposed through the convenience options below, which override the same keys here.
-- `desktop.ojuny.dux.session` (type: TOML, default: `{}`) — Dux Shell session (`session.json` seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.
+- `desktop.ojuny.dux.settings` (type: TOML) — Dux Modular Shell settings (settings.json) scalar/attr keys. The collection keys are exposed through the convenience options below, which override the same keys here.
+- `desktop.ojuny.dux.session` (type: TOML, default: `{}`) — Dux Modular Shell session (`session.json` seeded into the XDG state directory at login). `wallpaperPathLight` and `wallpaperPathDark` set the shell wallpaper.
 - `desktop.ojuny.dux.barConfigs` (type: attrsOf TOML, default per below) — Bar configurations keyed by id.
 - `desktop.ojuny.dux.barPreset` (enum, default: `default`) — Active bar preset: `caelestia`, `default`, `goth`, `none`, `sidebar-left`, `sidebar-right`, `simple-bar`, `simple-island`, `status`, `taskbar`, or `custom`. `custom` uses `barConfigs.custom`.
 - `desktop.ojuny.dux.barPresets` (type: attrsOf TOML, default: the bundled presets in `lib/defaults/bar-presets.nix`, internal) — Bar definitions keyed by preset id.
@@ -327,7 +327,7 @@ unfold = "spawn,/path/to/script unfold"
 - `desktop.ojuny.dux.dashCards` (type: attrsOf TOML, default per below) — Dashboard cards keyed by id.
 - `desktop.ojuny.dux.dashTabs` (type: attrsOf TOML, default per below) — Dashboard tabs keyed by id.
 - `desktop.ojuny.dux.dashOptions` (type: TOML, default per below) — Dashboard options; `weather.widgets` is id-keyed.
-- `desktop.ojuny.dux.clipboardSettings` (type: TOML) — Dux Shell clipboard settings (clsettings.json).
+- `desktop.ojuny.dux.clipboardSettings` (type: TOML) — Dux Modular Shell clipboard settings (clsettings.json).
 - `desktop.ojuny.dux.managePluginSettings` (type: bool, default: true) — Whether to generate plugin_settings.json from dux.plugins.
 
 Ordering and shape for the collection options:
@@ -611,7 +611,7 @@ attrset keyed by dock id. Nested `widgets` is an id-keyed attrset.
 }
 ```
 
-Note: the Dux Shell field `order` (a list of app ids) is a separate field from `_order`.
+Note: the Dux Modular Shell field `order` (a list of app ids) is a separate field from `_order`.
 
 ## `desktop.ojuny.dux.controlCenterWidgets` — Full default structure
 
@@ -959,7 +959,7 @@ Each `weather.widgets` entry may set `_order` (int, default 1000).
 ## `desktop.ojuny.dux.plugins`
 
 - type: attrsOf (attrsOf plugin), default: {}
-- description: Dux Shell plugins, keyed by plugin name.
+- description: Dux Modular Shell plugins, keyed by plugin name.
 
 ### Plugin structure
 
@@ -1022,9 +1022,9 @@ When `menu` is non-empty and `enable` is true, modules write a generated menu JS
 - Mango global keys: all keys present in `lib/defaults/mango.nix` are exposed via `desktop.ojuny.mango.global` (flattened into TOML `[global]` by `lib/to-toml.nix`).
 - Mango bind groups (`binds/mousebind/axisbind/gesturebind`): full default tree is in `lib/defaults/mango.nix`; structure is mode -> name -> bind fields as documented.
 - Rules: `desktop.ojuny.mango.rules` is a TOML-typed set; defaults include `tag_rule` and `window_rule` entries as shown.
-- Dux Shell settings: full defaults included above. Collection keys (`barConfigs`, `dockConfigs`, `controlCenterWidgets`, `dashCards`, `dashTabs`, `dashOptions`) are id-keyed attrsets rendered to arrays by `lib/mk-config.nix` (ordered by `_order`); the remaining keys live in `desktop.ojuny.dux.settings`. Clipboard defaults included above (`clsettings.json`). The generated settings fragment omits `configVersion`; Dux Shell treats an unversioned settings file as current.
-- Dux Shell session: generated `session.json` sets `configVersion = 7`, `wallpaperPath`, and `wallpaperPathLight` / `wallpaperPathDark` from the active wallpaper set.
-- Dux Shell plugins: attrs keyed by plugin name with `enable`, `src` (path/package), `settings` (merged into `plugin_settings.json`), `dir` (plugins/ subdirectory name) and `config` (extra file at `plugins/<dir>/config.json`, e.g. the `nixMonitor` command set).
+- Dux Modular Shell settings: full defaults included above. Collection keys (`barConfigs`, `dockConfigs`, `controlCenterWidgets`, `dashCards`, `dashTabs`, `dashOptions`) are id-keyed attrsets rendered to arrays by `lib/mk-config.nix` (ordered by `_order`); the remaining keys live in `desktop.ojuny.dux.settings`. Clipboard defaults included above (`clsettings.json`). The generated settings fragment omits `configVersion`; Dux Modular Shell treats an unversioned settings file as current.
+- Dux Modular Shell session: generated `session.json` sets `configVersion = 7`, `wallpaperPath`, and `wallpaperPathLight` / `wallpaperPathDark` from the active wallpaper set.
+- Dux Modular Shell plugins: attrs keyed by plugin name with `enable`, `src` (path/package), `settings` (merged into `plugin_settings.json`), `dir` (plugins/ subdirectory name) and `config` (extra file at `plugins/<dir>/config.json`, e.g. the `nixMonitor` command set).
 - dankMenu: structured menu rows + extra settings; when menu non-empty, `menuPath` is set automatically.
 - `desktop.ojuny.dms.*` is a renamed-option shim for `desktop.ojuny.dux.*`; it still evaluates with a warning and should not be used in new configuration.
 - File manager: `dux-files` is installed and wired by default (`dev.duxlabs.files.desktop`, FileChooser portal `dfiles`, `dfiles.service`). `nautilus` uses `org.gnome.Nautilus.desktop`; `custom` installs `customPackage`, skips MIME and portal wiring, and uses `customCommand` for the file-manager bind.

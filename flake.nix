@@ -1,5 +1,5 @@
 {
-  description = "Ojuny Desktop - pre-configured mangoWM + Dux Shell";
+  description = "Ojuny Desktop - pre-configured mangoWM + Dux Modular Shell";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

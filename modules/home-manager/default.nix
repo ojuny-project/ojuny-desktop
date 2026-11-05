@@ -109,7 +109,7 @@
         cat > "$out/share/wayland-sessions/ojuny.desktop" <<EOF
         [Desktop Entry]
         Name=Ojuny Desktop
-        Comment=Ojuny Desktop (mangoWM + Dux Shell, Home Manager)
+        Comment=Ojuny Desktop (mangoWM + Dux Modular Shell, Home Manager)
         Exec=${sessionScript}/bin/ojuny-hm-session
         TryExec=${sessionScript}/bin/ojuny-hm-session
         Type=Application
@@ -290,7 +290,7 @@
 
           systemd.user.services.ojuny-config = {
             Unit = {
-              Description = "Seed the ojuny Dux Shell session";
+              Description = "Seed the ojuny Dux Modular Shell session";
             };
             Service = {
               Type = "oneshot";

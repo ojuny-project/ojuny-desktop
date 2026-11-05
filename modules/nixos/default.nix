@@ -90,7 +90,7 @@
       cat > "$out/share/wayland-sessions/ojuny.desktop" <<EOF
       [Desktop Entry]
       Name=Ojuny Desktop
-      Comment=Ojuny Desktop (mangoWM + Dux Shell)
+      Comment=Ojuny Desktop (mangoWM + Dux Modular Shell)
       Exec=${ojuny.mangoWrapper}/bin/ojuny-mango
       Type=Application
       DesktopNames=mango;wlroots

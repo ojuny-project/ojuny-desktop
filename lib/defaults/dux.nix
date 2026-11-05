@@ -1,5 +1,5 @@
 {
-  # Dux Shell settings. Scalar/attr keys live in `settings`; the collection keys
+  # Dux Modular Shell settings. Scalar/attr keys live in `settings`; the collection keys
   # (barConfigs, dockConfigs, controlCenterWidgets, dashCards, dashTabs,
   # dashOptions) are stored as attrs keyed by id with an extra `_order`
   # field and are rendered back to arrays by lib/mk-config.nix.

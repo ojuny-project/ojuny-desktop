@@ -1,6 +1,6 @@
 # ojuny-desktop
 
-Ojuny Desktop packages MangoWM and Dux Shell for NixOS. The `desktop.ojuny.*` options generate both configurations from one source, and the repository exports a NixOS module, a Home Manager module, and a nested session runner.
+Ojuny Desktop packages MangoWM and Dux Modular Shell for NixOS. The `desktop.ojuny.*` options generate both configurations from one source, and the repository exports a NixOS module, a Home Manager module, and a nested session runner.
 
 Status: untested. No release tag exists. Applies to commit `34462aa`. The modules and the nested runner are described from the code; no end-to-end install is recorded as of 2026-11-03.
 
@@ -9,7 +9,7 @@ Status: untested. No release tag exists. Applies to commit `34462aa`. The module
 - Nix with flakes enabled.
 - NixOS with the module, or Home Manager on an existing system.
 - A Wayland session. MangoWM is the compositor, so an X11 session does not work.
-- Dux Shell needs `quickshell` 0.3.0 or newer. The flake supplies it, and the wrapper checks the version at build time.
+- Dux Modular Shell needs `quickshell` 0.3.0 or newer. The flake supplies it, and the wrapper checks the version at build time.
 - Stylix is optional. Import the Stylix module before setting `desktop.ojuny.stylix.enable`.
 - Disk and memory use are not measured.
 
@@ -50,11 +50,11 @@ Run the nested session without installing anything:
 nix run github:ojuny-project/ojuny-desktop
 ```
 
-The runner uses temporary `XDG_CONFIG_HOME`, `XDG_STATE_HOME`, `XDG_CACHE_HOME`, and `XDG_DATA_HOME` directories. It does not touch the installed Dux Shell configuration, and the directories disappear when the session exits.
+The runner uses temporary `XDG_CONFIG_HOME`, `XDG_STATE_HOME`, `XDG_CACHE_HOME`, and `XDG_DATA_HOME` directories. It does not touch the installed Dux Modular Shell configuration, and the directories disappear when the session exits.
 
 ## Configure
 
-The Home Manager module takes the same options. It installs the session, the file manager and its portal, wallpaper handling, the Ghostty wrapper, and a session entry for display managers. Mango binds, Dux Shell bar and plugin options, dankMenu, and Stylix colors are configuration options. A complete home configuration:
+The Home Manager module takes the same options. It installs the session, the file manager and its portal, wallpaper handling, the Ghostty wrapper, and a session entry for display managers. Mango binds, Dux Modular Shell bar and plugin options, dankMenu, and Stylix colors are configuration options. A complete home configuration:
 
 ```nix
 {
@@ -87,8 +87,8 @@ Change `user`, `/home/user`, and `stateVersion` to match the account. Every opti
 
 ## Limits
 
-- Generated Dux Shell files are symlinks into the store inside a writable `~/.config/dms`. The session file is a writable copy in `~/.local/state/dms`, replaced when the generated session changes, so wallpaper cycling survives. See [DESIGN.md](DESIGN.md).
-- On NixOS, activation repoints the links. Restart Dux Shell after a switch to reload the shell and MangoWM.
+- Generated Dux Modular Shell files are symlinks into the store inside a writable `~/.config/dms`. The session file is a writable copy in `~/.local/state/dms`, replaced when the generated session changes, so wallpaper cycling survives. See [DESIGN.md](DESIGN.md).
+- On NixOS, activation repoints the links. Restart Dux Modular Shell after a switch to reload the shell and MangoWM.
 - The Home Manager session entry lives at `$profile/share/wayland-sessions/ojuny.desktop`. GDM and LightDM do not scan the user profile, so symlink it into `/usr/share/wayland-sessions` or configure the display manager.
 - `desktop.ojuny.dms.*` was renamed to `desktop.ojuny.dux.*`. The old path still evaluates with a warning.
 - Terminal binds use `ojuny-ghostty`, which loads the generated config before the user's Ghostty config. The `ghostty` binary is not replaced.
@@ -100,7 +100,7 @@ Change `user`, `/home/user`, and `stateVersion` to match the account. Every opti
 - [options.generated.md](options.generated.md): generated reference for every public option and its declared default.
 - [DESIGN.md](DESIGN.md): how configs are generated, linked, and wrapped.
 - [MangoWM](https://github.com/mangowm/mango): compositor configuration and commands.
-- [Dux Shell](https://github.com/duxlabs-dev/dux-shell): shell settings and plugin behavior.
+- [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell): shell settings and plugin behavior.
 
 ## Contributing
 
@@ -108,4 +108,4 @@ Open issues at <https://github.com/ojuny-project/ojuny-desktop/issues>. A patch 
 
 ## License
 
-GPL-3.0. Built on [MangoWM](https://github.com/mangowm/mango) and [Dux Shell](https://github.com/duxlabs-dev/dux-shell), with optional [Stylix](https://github.com/nix-community/stylix) integration.
+GPL-3.0. Built on [MangoWM](https://github.com/mangowm/mango) and [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell), with optional [Stylix](https://github.com/nix-community/stylix) integration.
