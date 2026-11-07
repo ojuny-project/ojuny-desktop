@@ -81,8 +81,14 @@
       systems = nixpkgs.lib.systems.flakeExposed;
 
       perSystem =
-        { pkgs, ... }:
+        { pkgs, system, ... }:
         {
+          checks.default = pkgs.runCommand "check-default" { } ''
+            echo ${self.checks.${system}.menu-extra-entries} >/dev/null
+            echo ${self.checks.${system}.wallpaper-set} >/dev/null
+            touch $out
+          '';
+
           apps.ci = {
             type = "app";
             program = "${
