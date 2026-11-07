@@ -231,6 +231,7 @@ in
 
   snap = {
     range = 150;
+    gap = 4;
     leftInset = 3;
     rightInset = 3;
     topInset = 45;

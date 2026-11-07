@@ -19,7 +19,11 @@ require() {
 
 open_settings() {
   if require nix-settings-gui; then
-    nix-settings-gui >/dev/null 2>&1 &
+    if [ -n "${1:-}" ]; then
+      nix-settings-gui --page "$1" >/dev/null 2>&1 &
+    else
+      nix-settings-gui >/dev/null 2>&1 &
+    fi
   else
     notify "nix-settings-gui is not installed"
   fi
@@ -67,60 +71,50 @@ show_power() {
   esac
 }
 
-run_prompt() {
-  dms dmenu --prompt-only -p "Run" --disable-history > "$TMP/run"
-  local rc=$?
-  [ "$rc" = 0 ] || return 0
-  local cmd
-  IFS= read -r cmd < "$TMP/run" || true
-  [ -n "${cmd:-}" ] || return 0
-  nohup sh -c "$cmd" >/dev/null 2>&1 &
-}
-
 dispatch() {
   case "$1" in
-    installed-apps)
-      if require nix-shell-gui; then
-        nix-shell-gui >/dev/null 2>&1 &
-      else
-        open_settings
-      fi
-      ;;
+    browse-internet) dms ipc call defaultApp browser ;;
     settings) open_settings ;;
     system) hold_terminal "fastfetch" ;;
-    event-viewer) hold_terminal "journalctl -b -p warning --no-pager" ;;
-    device-manager) hold_terminal "lspci -nnk; printf '\\n'; lsusb" ;;
-    network)
-      if require nm-connection-editor; then
-        nm-connection-editor >/dev/null 2>&1 &
+    crashes)
+      if require ojuny; then
+        ghostty -e sh -c "ojuny crashes && zsh" >/dev/null 2>&1 &
       else
-        open_settings
+        notify "ojuny is not installed"
       fi
       ;;
-    computer-management) open_settings ;;
-    power-options) open_settings ;;
+    device-manager)
+      if require gnome-disks; then
+        gnome-disks >/dev/null 2>&1 &
+      else
+        notify "gnome-disks is not installed"
+      fi
+      ;;
+    network) dms ipc call control-center openWith network ;;
+    computer-management) open_settings "System" ;;
+    power-options) open_settings "Power" ;;
     terminal) ghostty >/dev/null 2>&1 & ;;
     terminal-admin) ghostty -e sudo -i >/dev/null 2>&1 & ;;
-    task-manager) ghostty -e dgop >/dev/null 2>&1 & ;;
-    files)
-      if require dfiles; then
-        dfiles open >/dev/null 2>&1 &
+    task-manager)
+      if require dgop; then
+        dgop >/dev/null 2>&1 &
       else
-        notify "dux-files is not installed"
+        notify "dgop is not installed"
       fi
       ;;
+    files) dms ipc call defaultApp fileManager ;;
     search) dms ipc call spotlight toggle ;;
-    run) run_prompt ;;
+    run) dms ipc call launcher openQuery ">" ;;
     *) return 0 ;;
   esac
 }
 
 show_main() {
   {
-    printf 'Installed apps\0display\x1f[I]  Installed apps\x1fmeta\x1fI\x1finfo\x1finstalled-apps\n'
+    printf 'Browse the internet\0display\x1f[I]  Browse the internet\x1fmeta\x1fI\x1finfo\x1fbrowse-internet\n'
     printf 'Settings\0display\x1f[S]  Settings\x1fmeta\x1fS\x1finfo\x1fsettings\n'
     printf 'System\0display\x1f[Y]  System\x1fmeta\x1fY\x1finfo\x1fsystem\n'
-    printf 'Event Viewer\0display\x1f[V]  Event Viewer\x1fmeta\x1fV\x1finfo\x1fevent-viewer\n'
+    printf 'Crashes\0display\x1f[V]  Crashes\x1fmeta\x1fV\x1finfo\x1fcrashes\n'
     printf 'Device Manager\0display\x1f[D]  Device Manager\x1fmeta\x1fD\x1finfo\x1fdevice-manager\n'
     printf 'Network connections\0display\x1f[N]  Network connections\x1fmeta\x1fN\x1finfo\x1fnetwork\n'
     printf 'Computer Management\0display\x1f[G]  Computer Management\x1fmeta\x1fG\x1finfo\x1fcomputer-management\n'
@@ -135,7 +129,7 @@ show_main() {
   } > "$TMP/items"
 
   dms dmenu --input "$TMP/items" -p "Quick Links" --icon menu \
-    --no-custom --disable-history --print-info --size 4 --select "Installed apps" \
+    --no-custom --disable-history --print-info --size 4 --select "Browse the internet" \
     --keybind 1=i --keybind 2=s --keybind 3=y --keybind 4=v --keybind 5=d \
     --keybind 6=n --keybind 7=g --keybind 8=p --keybind 9=c --keybind 10=a \
     --keybind 11=t --keybind 12=e --keybind 13=f --keybind 14=r --keybind 15=u \
@@ -148,10 +142,10 @@ show_main() {
       ACTION="${picked[1]:-}"
       return 0
       ;;
-    10) ACTION=installed-apps; return 0 ;;
+    10) ACTION=browse-internet; return 0 ;;
     11) ACTION=settings; return 0 ;;
     12) ACTION=system; return 0 ;;
-    13) ACTION=event-viewer; return 0 ;;
+    13) ACTION=crashes; return 0 ;;
     14) ACTION=device-manager; return 0 ;;
     15) ACTION=network; return 0 ;;
     16) ACTION=computer-management; return 0 ;;

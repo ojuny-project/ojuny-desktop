@@ -13,6 +13,14 @@
 }:
 let
   mangoDefaults = import ../../lib/defaults/mango.nix;
+  snapConfigFile = pkgs.writeText "ojuny-snap.conf" ''
+    OJUNY_SNAP_RANGE=${toString mangoDefaults.snap.range}
+    OJUNY_SNAP_GAP=${toString mangoDefaults.snap.gap}
+    OJUNY_SNAP_LEFT_INSET=${toString mangoDefaults.snap.leftInset}
+    OJUNY_SNAP_RIGHT_INSET=${toString mangoDefaults.snap.rightInset}
+    OJUNY_SNAP_TOP_INSET=${toString mangoDefaults.snap.topInset}
+    OJUNY_SNAP_BOTTOM_INSET=${toString mangoDefaults.snap.bottomInset}
+  '';
   duxDefaults = import ../../lib/defaults/dux.nix;
   pluginDefaults = import ../../lib/mk-plugin-defaults.nix {
     inherit lib;
@@ -93,6 +101,8 @@ pkgs.writeShellApplication {
 
     install -d -m 0755 "$XDG_CONFIG_HOME/ghostty"
     ln -sfn ${ghosttyConfig} "$XDG_CONFIG_HOME/ghostty/config"
+    install -d -m 0755 "$XDG_CONFIG_HOME/ojuny"
+    ln -sfn ${snapConfigFile} "$XDG_CONFIG_HOME/ojuny/snap.conf"
 
     exec dbus-run-session --config-file=${pkgs.dbus}/share/dbus-1/session.conf -- ${ojuny.mangoWrapper}/bin/ojuny-mango "$@"
   '';

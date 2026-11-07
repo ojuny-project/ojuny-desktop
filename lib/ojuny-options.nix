@@ -149,30 +149,35 @@ in
               default = mangoDefaults.snap.range;
               description = "Width in pixels of each edge and corner snap zone.";
             };
+            gap = mkOption {
+              type = types.ints.unsigned;
+              default = mangoDefaults.snap.gap;
+              description = "Space in pixels between adjacent snapped windows.";
+            };
             leftInset = mkOption {
               type = types.ints.unsigned;
               default = mangoDefaults.snap.leftInset;
-              description = "Space in pixels between the left screen edge and a snapped window.";
+              description = "Outer space in pixels between the left screen edge and a snapped window.";
             };
             rightInset = mkOption {
               type = types.ints.unsigned;
               default = mangoDefaults.snap.rightInset;
-              description = "Space in pixels between the right screen edge and a snapped window.";
+              description = "Outer space in pixels between the right screen edge and a snapped window.";
             };
             topInset = mkOption {
               type = types.ints.unsigned;
               default = mangoDefaults.snap.topInset;
-              description = "Space in pixels between the top screen edge and a snapped window, usually the bar height.";
+              description = "Outer space in pixels between the top screen edge and a snapped window, usually the bar height.";
             };
             bottomInset = mkOption {
               type = types.ints.unsigned;
               default = mangoDefaults.snap.bottomInset;
-              description = "Space in pixels between the bottom screen edge and a snapped window.";
+              description = "Outer space in pixels between the bottom screen edge and a snapped window.";
             };
           };
         };
         default = mangoDefaults.snap;
-        description = "Zones and insets used by the ojuny-snap command and the Super+H bind.";
+        description = "Zones, inner gap and outer insets used by the ojuny-snap command and the Super+H bind.";
       };
       binds = mkOption {
         type = bindGroup;

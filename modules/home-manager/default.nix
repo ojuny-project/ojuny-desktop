@@ -11,6 +11,14 @@
     }:
     let
       cfg = config.desktop.ojuny;
+      snapConfigFile = pkgs.writeText "ojuny-snap.conf" ''
+        OJUNY_SNAP_RANGE=${toString cfg.mango.snap.range}
+        OJUNY_SNAP_GAP=${toString cfg.mango.snap.gap}
+        OJUNY_SNAP_LEFT_INSET=${toString cfg.mango.snap.leftInset}
+        OJUNY_SNAP_RIGHT_INSET=${toString cfg.mango.snap.rightInset}
+        OJUNY_SNAP_TOP_INSET=${toString cfg.mango.snap.topInset}
+        OJUNY_SNAP_BOTTOM_INSET=${toString cfg.mango.snap.bottomInset}
+      '';
       dankMenu = osConfig.desktop.ojuny.dankMenu or cfg.dankMenu;
       menuLib = import ../../lib/dank-menu.nix { inherit lib; };
       toMenuJson = menuLib.toMenuJson;
@@ -254,9 +262,11 @@
 
           services.kdeconnect.enable = lib.mkDefault true;
 
-          xdg.configFile = lib.mapAttrs' (
+          xdg.configFile = (lib.mapAttrs' (
             rel: src: lib.nameValuePair rel { source = src; }
-          ) ojuny.configLinks;
+          ) ojuny.configLinks) // {
+            "ojuny/snap.conf".source = snapConfigFile;
+          };
 
           home.activation.ojunyDuxFirstLaunch = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             $DRY_RUN_CMD install -d -m 0755 "${config.xdg.configHome}/dms"

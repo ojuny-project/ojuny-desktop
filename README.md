@@ -85,7 +85,7 @@ The Home Manager module takes the same options. It installs the session, the fil
 
 Change `user`, `/home/user`, and `stateVersion` to match the account. Every option and its default is in [options.md](options.md). [DESIGN.md](DESIGN.md) explains how the files are generated and linked.
 
-The default Super+H bind runs `ojuny-snap`, which floats or unfloats the focused window and snaps it to the pointer's screen zone. The zone width and screen insets are `desktop.ojuny.mango.snap.*`; [options.md](options.md) lists them and [DESIGN.md](DESIGN.md) describes the nine-zone behavior.
+The default Super+H bind runs `ojuny-snap`, which floats or unfloats the focused window and snaps it to the pointer's screen zone. The zone width, inner gap and screen insets are `desktop.ojuny.mango.snap.*`; [options.md](options.md) lists them and [DESIGN.md](DESIGN.md) describes the nine-zone behavior. The generated config file is re-read on every press, so a rebuild applies new values without restarting the session.
 
 ## Limits
 

@@ -1,14 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+config_file="${OJUNY_SNAP_CONFIG:-}"
+if [ -z "$config_file" ]; then
+  user_config="${XDG_CONFIG_HOME:-$HOME/.config}/ojuny/snap.conf"
+  if [ -r "$user_config" ]; then
+    config_file="$user_config"
+  elif [ -r /etc/ojuny/snap.conf ]; then
+    config_file=/etc/ojuny/snap.conf
+  fi
+fi
+if [ -n "$config_file" ] && [ -r "$config_file" ]; then
+  # shellcheck source=/dev/null
+  . "$config_file"
+fi
+
 snap_range="${OJUNY_SNAP_RANGE:-150}"
+snap_gap="${OJUNY_SNAP_GAP:-4}"
 left_inset="${OJUNY_SNAP_LEFT_INSET:-3}"
 right_inset="${OJUNY_SNAP_RIGHT_INSET:-3}"
 top_inset="${OJUNY_SNAP_TOP_INSET:-45}"
 bottom_inset="${OJUNY_SNAP_BOTTOM_INSET:-5}"
-
-horizontal_inset=$((left_inset + right_inset))
-vertical_inset=$((top_inset + bottom_inset))
 
 cursor="$(mmsg get cursorpos)"
 cursor_x="$(jq -r '.x | floor' <<<"$cursor")"
@@ -28,6 +40,18 @@ if [ "$is_floating" != "true" ]; then
   mmsg dispatch togglefloating
   exit 0
 fi
+
+usable_x=$((monitor_x + left_inset))
+usable_y=$((monitor_y + top_inset))
+usable_width=$((monitor_width - left_inset - right_inset))
+usable_height=$((monitor_height - top_inset - bottom_inset))
+
+column_width=$(((usable_width - snap_gap) / 2))
+row_height=$(((usable_height - snap_gap) / 2))
+right_x=$((usable_x + column_width + snap_gap))
+bottom_y=$((usable_y + row_height + snap_gap))
+right_width=$((usable_x + usable_width - right_x))
+bottom_height=$((usable_y + usable_height - bottom_y))
 
 left_zone_outer=$monitor_x
 left_zone_inner=$((monitor_x + snap_range))
@@ -75,47 +99,57 @@ elif [ "$bottom" = "true" ]; then
   resize_target="B"
 fi
 
-top_left="$((left_zone_outer + left_inset)),$((top_zone_outer + top_inset))"
-top_right="$((monitor_width / 2 + left_zone_outer)),$((top_zone_outer + top_inset))"
-bottom_left="$((left_zone_outer + left_inset)),$((monitor_height / 2 + top_zone_outer + top_inset / 2))"
-bottom_right="$((monitor_width / 2 + left_zone_outer)),$((monitor_height / 2 + top_zone_outer + top_inset / 2))"
-size_quarter="$((monitor_width / 2 - horizontal_inset)),$((monitor_height / 2 - vertical_inset / 2))"
-size_vertical_half="$((monitor_width / 2 - horizontal_inset)),$((monitor_height - vertical_inset))"
-size_top_half="$((monitor_width - horizontal_inset)),$((monitor_height / 2 - top_inset))"
-size_horizontal_half="$((monitor_width - horizontal_inset)),$((monitor_height / 2 - bottom_inset))"
+size_tl="$column_width,$row_height"
+size_tr="$right_width,$row_height"
+size_bl="$column_width,$bottom_height"
+size_br="$right_width,$bottom_height"
+size_vertical_left="$column_width,$usable_height"
+size_vertical_right="$right_width,$usable_height"
+size_top_half="$usable_width,$row_height"
+size_bottom_half="$usable_width,$bottom_height"
+
+# Temporary workaround: mango parses a leading minus as a relative move, so
+# reset to the origin before a target with a negative coordinate. Remove when
+# upstream accepts negative absolute coordinates.
+move_window() {
+  if [ "$1" -lt 0 ] || [ "$2" -lt 0 ]; then
+    mmsg dispatch "movewin,0,0"
+  fi
+  mmsg dispatch "movewin,$1,$2"
+}
 
 case "$resize_target" in
   TL)
-    mmsg dispatch "movewin,$top_left"
-    mmsg dispatch "resizewin,$size_quarter"
+    move_window "$usable_x" "$usable_y"
+    mmsg dispatch "resizewin,$size_tl"
     ;;
   TR)
-    mmsg dispatch "movewin,$top_right"
-    mmsg dispatch "resizewin,$size_quarter"
+    move_window "$right_x" "$usable_y"
+    mmsg dispatch "resizewin,$size_tr"
     ;;
   BL)
-    mmsg dispatch "movewin,$bottom_left"
-    mmsg dispatch "resizewin,$size_quarter"
+    move_window "$usable_x" "$bottom_y"
+    mmsg dispatch "resizewin,$size_bl"
     ;;
   BR)
-    mmsg dispatch "movewin,$bottom_right"
-    mmsg dispatch "resizewin,$size_quarter"
+    move_window "$right_x" "$bottom_y"
+    mmsg dispatch "resizewin,$size_br"
     ;;
   L)
-    mmsg dispatch "movewin,$top_left"
-    mmsg dispatch "resizewin,$size_vertical_half"
+    move_window "$usable_x" "$usable_y"
+    mmsg dispatch "resizewin,$size_vertical_left"
     ;;
   R)
-    mmsg dispatch "movewin,$top_right"
-    mmsg dispatch "resizewin,$size_vertical_half"
+    move_window "$right_x" "$usable_y"
+    mmsg dispatch "resizewin,$size_vertical_right"
     ;;
   T)
-    mmsg dispatch "movewin,$top_left"
+    move_window "$usable_x" "$usable_y"
     mmsg dispatch "resizewin,$size_top_half"
     ;;
   B)
-    mmsg dispatch "movewin,$bottom_left"
-    mmsg dispatch "resizewin,$size_horizontal_half"
+    move_window "$usable_x" "$bottom_y"
+    mmsg dispatch "resizewin,$size_bottom_half"
     ;;
   none)
     mmsg dispatch togglefloating

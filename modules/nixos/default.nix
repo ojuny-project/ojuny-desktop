@@ -3,6 +3,14 @@
   flake.modules.nixos.ojuny-desktop = { config, lib, pkgs, options, ... }:
   let
     cfg = config.desktop.ojuny;
+    snapConfigFile = pkgs.writeText "ojuny-snap.conf" ''
+      OJUNY_SNAP_RANGE=${toString cfg.mango.snap.range}
+      OJUNY_SNAP_GAP=${toString cfg.mango.snap.gap}
+      OJUNY_SNAP_LEFT_INSET=${toString cfg.mango.snap.leftInset}
+      OJUNY_SNAP_RIGHT_INSET=${toString cfg.mango.snap.rightInset}
+      OJUNY_SNAP_TOP_INSET=${toString cfg.mango.snap.topInset}
+      OJUNY_SNAP_BOTTOM_INSET=${toString cfg.mango.snap.bottomInset}
+    '';
     menuLib = import ../../lib/dank-menu.nix { inherit lib; };
     toMenuJson = menuLib.toMenuJson;
     menuTree = menuLib.merge cfg.dankMenu.menu cfg.dankMenu.extraEntries;
@@ -223,6 +231,8 @@
       };
 
       environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap ] ++ cfg.defaultApps;
+
+      environment.etc."ojuny/snap.conf".source = snapConfigFile;
 
       systemd.user.services.ojuny-config = {
         description = "Link the ojuny desktop configuration into the user config directory";

@@ -29,25 +29,10 @@ let
 
   mangoConfigFile = pkgs.writeText "ojuny.toml" rendered.mangoToml;
 
-  snapConfig = settings.mango.snap or {
-    range = 150;
-    leftInset = 3;
-    rightInset = 3;
-    topInset = 45;
-    bottomInset = 5;
-  };
-
   snapPackage = pkgs.writeShellApplication {
     name = "ojuny-snap";
     runtimeInputs = [ pkgs.jq ];
-    text = ''
-      export OJUNY_SNAP_RANGE="${toString snapConfig.range}"
-      export OJUNY_SNAP_LEFT_INSET="${toString snapConfig.leftInset}"
-      export OJUNY_SNAP_RIGHT_INSET="${toString snapConfig.rightInset}"
-      export OJUNY_SNAP_TOP_INSET="${toString snapConfig.topInset}"
-      export OJUNY_SNAP_BOTTOM_INSET="${toString snapConfig.bottomInset}"
-      ${builtins.readFile ./scripts/ojuny-snap.sh}
-    '';
+    text = builtins.readFile ./scripts/ojuny-snap.sh;
   };
 
   duxConfigDir = pkgs.runCommand "ojuny-dux-config" { } ''

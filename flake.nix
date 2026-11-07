@@ -80,7 +80,26 @@
 
       systems = nixpkgs.lib.systems.flakeExposed;
 
+      perSystem =
+        { pkgs, ... }:
+        {
+          apps.ci = {
+            type = "app";
+            program = "${
+              pkgs.writeShellApplication {
+                name = "ci";
+                runtimeInputs = [ pkgs.nix ];
+                text = ''
+                  exec nix flake check "$@"
+                '';
+              }
+            }/bin/ci";
+          };
+        };
+
       flake = {
+        hydraJobs = self.checks;
+
         nixosModules.default = self.modules.nixos.ojuny-desktop;
         homeManagerModules.default = self.modules.homeManager.ojuny-desktop;
         homeModules.default = self.modules.homeManager.ojuny-desktop;

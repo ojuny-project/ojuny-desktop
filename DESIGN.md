@@ -16,7 +16,13 @@ All options live under `desktop.ojuny.*` and are shared across NixOS and Home Ma
 ## Window snapping
 `ojuny-snap` is built by `lib/mk-ojuny.nix` from `lib/scripts/ojuny-snap.sh`. The default Super+H bind runs it through `spawn_shell`.
 
-The command reads the focused monitor and pointer position, then treats the monitor as nine zones: four edge bands, four corner bands, and the centre. Each band is `desktop.ojuny.mango.snap.range` pixels wide. A tiled focused window is floated on the first press. A floating window is unfloated when the pointer is in the centre zone, otherwise it is moved and resized into the matching half or quarter. The configured insets keep snapped windows clear of the bar and screen borders. The command receives the options as `OJUNY_SNAP_*` environment variables, so the script also runs standalone with its built-in defaults.
+The command reads the focused monitor and pointer position, then treats the monitor as nine zones: four edge bands, four corner bands, and the centre. Each band is `desktop.ojuny.mango.snap.range` pixels wide. A tiled focused window is floated on the first press. A floating window is unfloated when the pointer is in the centre zone, otherwise it is moved and resized into the matching half or quarter.
+
+The insets define a usable rectangle inside the monitor. The rectangle is split into two columns and two rows with `desktop.ojuny.mango.snap.gap` between them. Edge halves span the full usable rectangle in one direction, and quadrants use one column and one row. This keeps the outer insets independent from the inner gap, so a bar on any side only changes that side's inset and the quadrants still tile with equal gaps.
+
+`movewin` and `resizewin` use global layout coordinates, so the script adds the monitor origin from `mmsg get monitor` before applying insets. mango currently parses a leading minus in `movewin` as a relative move, so when a target coordinate is negative the script dispatches `movewin,0,0` first and then the normal target, which lands on the absolute position. That reset is a temporary workaround and should be removed once upstream mango accepts negative absolute coordinates.
+
+The NixOS module writes the values to `/etc/ojuny/snap.conf` and the Home Manager module writes `~/.config/ojuny/snap.conf`. The script sources the user file first and the system file second, so a rebuild updates the next keypress without restarting the desktop session. The script also runs standalone with its built-in defaults.
 
 ## Flake structure (dendritic)
 - flake-parts based. Modules imported via `importTree ./modules`.
