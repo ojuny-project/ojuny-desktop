@@ -62,6 +62,7 @@ let
     extraPackages = with pkgs; [
       ghostty
       ghosttyWrapper
+      ojuny.snap
       firefox
       duxGop
       duxSearch

@@ -90,7 +90,7 @@
           plugins = cfg.dux.plugins;
           managePluginSettings = cfg.dux.managePluginSettings;
         };
-        extraPackages = [ ghosttyWrapper ] ++ cfg.defaultApps ++ lib.optional (fileManager.package != null) fileManager.package;
+        extraPackages = [ ghosttyWrapper ojuny.snap ] ++ cfg.defaultApps ++ lib.optional (fileManager.package != null) fileManager.package;
       };
 
       sessionScript = pkgs.writeShellApplication {
@@ -246,6 +246,7 @@
 
           home.packages = [
             ojuny.mangoWrapper
+            ojuny.snap
             session
           ]
           ++ cfg.defaultApps

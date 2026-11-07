@@ -202,6 +202,20 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 - description: Mango window/tag/layer/monitor/device rules.
 
 
+## `desktop.ojuny.mango.snap`
+
+- type: submodule, default: {"bottomInset": 5, "leftInset": 3, "range": 150, "rightInset": 3, "topInset": 45}
+- description: Zones and insets used by the `ojuny-snap` command and the Super+H bind.
+
+`ojuny-snap` treats the focused monitor as nine zones. The four edges and four corners are `range` pixels wide; everything else is the centre zone. Pressing Super+H floats a tiled window, unfloats a floating window while the pointer is in the centre zone, and snaps a floating window to a half or quarter when the pointer is in an edge or corner zone. The top and bottom edges use halves, the left and right edges use vertical halves, and the corners use quarters. Insets keep the snap clear of the bar and screen borders.
+
+- `desktop.ojuny.mango.snap.range` (int, default: 150): Width in pixels of each edge and corner snap zone.
+- `desktop.ojuny.mango.snap.leftInset` (int, default: 3): Space in pixels between the left screen edge and a snapped window.
+- `desktop.ojuny.mango.snap.rightInset` (int, default: 3): Space in pixels between the right screen edge and a snapped window.
+- `desktop.ojuny.mango.snap.topInset` (int, default: 45): Space in pixels between the top screen edge and a snapped window, usually the bar height.
+- `desktop.ojuny.mango.snap.bottomInset` (int, default: 5): Space in pixels between the bottom screen edge and a snapped window.
+
+
 ## `desktop.ojuny.mango.binds`
 
 - type: attrsOf (attrsOf bind), default: large nested set

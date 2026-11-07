@@ -1,6 +1,5 @@
 let
   pasteScript = builtins.path { name = "paste.sh"; path = ../scripts/paste.sh; };
-  layoutbuttonScript = builtins.path { name = "layoutbutton.sh"; path = ../scripts/layoutbutton.sh; };
 in
 {
   global = {
@@ -230,6 +229,14 @@ in
     device_rule = [ ];
   };
 
+  snap = {
+    range = 150;
+    leftInset = 3;
+    rightInset = 3;
+    topInset = 45;
+    bottomInset = 5;
+  };
+
   binds = {
     common = {
       # System / Common
@@ -412,13 +419,13 @@ in
         subcat = "Management";
       };
 
-      # Windows / Layout
-      layoutbutton = {
+      # Windows / Snap
+      snap = {
         modifier = [ "SUPER" ];
         keys = [ "H" ];
         dispatcher = "spawn_shell";
-        args = layoutbuttonScript;
-        description = "Layout-Specific Toggle";
+        args = "ojuny-snap";
+        description = "Float, unfloat or snap the focused window";
         group = "Windows";
         subcat = "Layout";
       };

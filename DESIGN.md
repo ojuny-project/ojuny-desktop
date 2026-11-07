@@ -13,6 +13,11 @@ All options live under `desktop.ojuny.*` and are shared across NixOS and Home Ma
 - Dux Modular Shell: the settings are rendered into a `config.d/00-ojuny.json` fragment, alongside `clsettings.json` (clipboard), `cheatsheets/binds.json`, `plugin_settings.json` and plugin sources, in a store `dms` config tree. Each generated file is symlinked individually into `~/.config/dms`, which stays a real, writable directory so Dux Modular Shell can create and update its own files there (`ojuny-config` user oneshot with `restartTriggers` on NixOS for all users, `home.file` plus an `ojuny-config --seed` user service on Home Manager); no `XDG_CONFIG_HOME` override. `lib/mk-ojuny.nix` returns the link map as `configLinks` and the tree as `duxConfigDir` (`ojuny-dux-config`).
 - Keybinds: single source of truth in `desktop.ojuny.mango.binds/*` and related bind groups; cheatsheet JSON is generated from them via `lib/to-binds.nix`, grouped by each bind's `group` with `subcat` as the inner category.
 
+## Window snapping
+`ojuny-snap` is built by `lib/mk-ojuny.nix` from `lib/scripts/ojuny-snap.sh`. The default Super+H bind runs it through `spawn_shell`.
+
+The command reads the focused monitor and pointer position, then treats the monitor as nine zones: four edge bands, four corner bands, and the centre. Each band is `desktop.ojuny.mango.snap.range` pixels wide. A tiled focused window is floated on the first press. A floating window is unfloated when the pointer is in the centre zone, otherwise it is moved and resized into the matching half or quarter. The configured insets keep snapped windows clear of the bar and screen borders. The command receives the options as `OJUNY_SNAP_*` environment variables, so the script also runs standalone with its built-in defaults.
+
 ## Flake structure (dendritic)
 - flake-parts based. Modules imported via `importTree ./modules`.
 - `packages.<system>.default` = nested desktop runner (`packages/desktop-runner/default.nix`).

@@ -141,6 +141,39 @@ in
         default = mangoDefaults.rules;
         description = "Mango window/tag/layer/monitor/device rules.";
       };
+      snap = mkOption {
+        type = types.submodule {
+          options = {
+            range = mkOption {
+              type = types.ints.positive;
+              default = mangoDefaults.snap.range;
+              description = "Width in pixels of each edge and corner snap zone.";
+            };
+            leftInset = mkOption {
+              type = types.ints.unsigned;
+              default = mangoDefaults.snap.leftInset;
+              description = "Space in pixels between the left screen edge and a snapped window.";
+            };
+            rightInset = mkOption {
+              type = types.ints.unsigned;
+              default = mangoDefaults.snap.rightInset;
+              description = "Space in pixels between the right screen edge and a snapped window.";
+            };
+            topInset = mkOption {
+              type = types.ints.unsigned;
+              default = mangoDefaults.snap.topInset;
+              description = "Space in pixels between the top screen edge and a snapped window, usually the bar height.";
+            };
+            bottomInset = mkOption {
+              type = types.ints.unsigned;
+              default = mangoDefaults.snap.bottomInset;
+              description = "Space in pixels between the bottom screen edge and a snapped window.";
+            };
+          };
+        };
+        default = mangoDefaults.snap;
+        description = "Zones and insets used by the ojuny-snap command and the Super+H bind.";
+      };
       binds = mkOption {
         type = bindGroup;
         default = mangoDefaults.binds;

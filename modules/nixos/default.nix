@@ -82,7 +82,7 @@
         plugins = cfg.dux.plugins;
         managePluginSettings = cfg.dux.managePluginSettings;
       };
-      extraPackages = [ ghosttyWrapper ] ++ cfg.defaultApps;
+      extraPackages = [ ghosttyWrapper ojuny.snap ] ++ cfg.defaultApps;
     };
 
     session = (pkgs.runCommand "ojuny-desktop-session" { } ''
@@ -222,7 +222,7 @@
         userWallpapers = wallpaperSet.userWallpapers;
       };
 
-      environment.systemPackages = [ ojuny.mangoWrapper ] ++ cfg.defaultApps;
+      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap ] ++ cfg.defaultApps;
 
       systemd.user.services.ojuny-config = {
         description = "Link the ojuny desktop configuration into the user config directory";

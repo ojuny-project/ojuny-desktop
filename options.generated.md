@@ -5,7 +5,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 `lib.evalModules`. Internal options are omitted. Regenerate with
 `python3 scripts/gen-options.py`; CI fails when this file is stale.
 
-95 public options under `desktop.ojuny`.
+101 public options under `desktop.ojuny`.
 
 ## top level
 
@@ -108,6 +108,12 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 - `desktop.ojuny.mango.mousebind.<name>.<name>.modifier` (`list of string`, default `[ "SUPER" ]`)
 - `desktop.ojuny.mango.mousebind.<name>.<name>.subcat` (`string`, default `""`): Cheatsheet category used to sort within the group. Empty omits it.
 - `desktop.ojuny.mango.rules` (`TOML value`, default `{ device_rule = [ ]; layer_rule = [ ]; monitor_rule = [ ]; tag_rule = [ { id = 0; layout_name = "dwindle"; } ]; window_rule = [ { app_id = "foot"; focus…`): Mango window/tag/layer/monitor/device rules.
+- `desktop.ojuny.mango.snap` (`submodule`, default `{ bottomInset = 5; leftInset = 3; range = 150; rightInset = 3; topInset = 45; }`): Zones and insets used by the ojuny-snap command and the Super+H bind.
+- `desktop.ojuny.mango.snap.bottomInset` (`unsigned integer, meaning >=0`, default `5`): Space in pixels between the bottom screen edge and a snapped window.
+- `desktop.ojuny.mango.snap.leftInset` (`unsigned integer, meaning >=0`, default `3`): Space in pixels between the left screen edge and a snapped window.
+- `desktop.ojuny.mango.snap.range` (`positive integer, meaning >0`, default `150`): Width in pixels of each edge and corner snap zone.
+- `desktop.ojuny.mango.snap.rightInset` (`unsigned integer, meaning >=0`, default `3`): Space in pixels between the right screen edge and a snapped window.
+- `desktop.ojuny.mango.snap.topInset` (`unsigned integer, meaning >=0`, default `45`): Space in pixels between the top screen edge and a snapped window, usually the bar height.
 - `desktop.ojuny.mango.source` (`list of string`, default `[ ]`): Additional config files to source.
 - `desktop.ojuny.mango.switchbind` (`attribute set of (TOML value)`, default `{ }`): Switch bindings keyed by key mode, then by fold or unfold, with a dispatcher string such as "spawn,command".
 - `desktop.ojuny.mango.var` (`TOML value`, default `{ }`): Mango [var] variables.
