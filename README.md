@@ -111,3 +111,4 @@ Open issues at <https://github.com/ojuny-project/ojuny-desktop/issues>. A patch 
 ## License
 
 GPL-3.0. Built on [MangoWM](https://github.com/mangowm/mango) and [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell), with optional [Stylix](https://github.com/nix-community/stylix) integration.
+
