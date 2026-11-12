@@ -126,7 +126,10 @@
       '';
     in
     {
-      imports = [ self.modules.homeManager.ojuny-desktop-options ];
+      imports = [
+        self.modules.homeManager.ojuny-desktop-options
+        inputs.ojuny-login-splash.homeManagerModules.default
+      ];
 
       config = lib.mkIf cfg.enable (
         {
@@ -194,6 +197,8 @@
               Before = [ "xdg-desktop-autostart.target" ];
             };
           };
+
+          services.ojuny-login-splash.enable = lib.mkDefault true;
 
           desktop.ojuny.mango.global = lib.mkIf (useStylixTheme || useFallbackTheme) (
             lib.mkDefault (

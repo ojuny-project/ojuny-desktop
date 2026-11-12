@@ -611,6 +611,26 @@
         "type": "github"
       }
     },
+    "ojuny-login-splash": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794513339,
+        "narHash": "sha256-KRWIoeWX9cQRYp3vf/GAoOTw/V0cSmMajqCrX7nPmRI=",
+        "owner": "ojuny-project",
+        "repo": "ojuny-login-splash",
+        "rev": "7e1957afc0e71812a294e7927880c9e79a77966c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ojuny-project",
+        "repo": "ojuny-login-splash",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "dux-calendar": "dux-calendar",
@@ -624,6 +644,7 @@
         "home-manager": "home-manager",
         "mangowm": "mangowm",
         "nixpkgs": "nixpkgs",
+        "ojuny-login-splash": "ojuny-login-splash",
         "stylix": "stylix"
       }
     },

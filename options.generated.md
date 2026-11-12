@@ -107,7 +107,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 - `desktop.ojuny.mango.mousebind.<name>.<name>.keys` (`list of string`, default `[ ]`)
 - `desktop.ojuny.mango.mousebind.<name>.<name>.modifier` (`list of string`, default `[ "SUPER" ]`)
 - `desktop.ojuny.mango.mousebind.<name>.<name>.subcat` (`string`, default `""`): Cheatsheet category used to sort within the group. Empty omits it.
-- `desktop.ojuny.mango.rules` (`TOML value`, default `{ device_rule = [ ]; layer_rule = [ ]; monitor_rule = [ ]; tag_rule = [ { id = 0; layout_name = "dwindle"; } ]; window_rule = [ { app_id = "foot"; focus…`): Mango window/tag/layer/monitor/device rules.
+- `desktop.ojuny.mango.rules` (`TOML value`, default `{ device_rule = [ ]; layer_rule = [ { layer_name = "ojuny-login-splash"; no_animation = 1; no_blur = 1; no_shadow = 1; } ]; monitor_rule = [ ]; tag_rule = [ …`): Mango window/tag/layer/monitor/device rules.
 - `desktop.ojuny.mango.snap` (`submodule`, default `{ bottomInset = 5; gap = 4; leftInset = 3; range = 150; rightInset = 3; topInset = 45; }`): Zones, inner gap and outer insets used by the ojuny-snap command and the Super+H bind.
 - `desktop.ojuny.mango.snap.bottomInset` (`unsigned integer, meaning >=0`, default `5`): Outer space in pixels between the bottom screen edge and a snapped window.
 - `desktop.ojuny.mango.snap.gap` (`unsigned integer, meaning >=0`, default `4`): Space in pixels between adjacent snapped windows.

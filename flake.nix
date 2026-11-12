@@ -58,6 +58,11 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ojuny-login-splash = {
+      url = "github:ojuny-project/ojuny-login-splash";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, flake-parts, nixpkgs, ... }:

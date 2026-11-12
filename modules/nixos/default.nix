@@ -19,6 +19,7 @@
     duxDefaults = import ../../lib/defaults/dux.nix;
     barPresetDefaults = import ../../lib/defaults/bar-presets.nix;
     duxFiles = inputs.dux-files.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    loginSplash = inputs.ojuny-login-splash.packages.${pkgs.stdenv.hostPlatform.system}.default;
     fileManager = (import ../../lib/file-manager.nix { inherit lib pkgs; }).resolve {
       inherit (cfg) fileManager;
       inherit duxFiles;
@@ -175,6 +176,21 @@
         ];
         after = [ "graphical-session-pre.target" ];
         before = [ "xdg-desktop-autostart.target" ];
+      };
+
+      systemd.user.services.ojuny-login-splash = {
+        description = "Ojuny login splash";
+        partOf = [ "mango-session.target" ];
+        after = [ "graphical-session-pre.target" ];
+        before = [ "xdg-desktop-autostart.target" ];
+        wantedBy = [ "mango-session.target" ];
+        serviceConfig = {
+          Type = "exec";
+          ExecStart = "${loginSplash}/bin/ojuny-login-splash --seconds 10";
+          ExecStop = "${loginSplash}/bin/ojuny-login-splash --quit";
+          Restart = "no";
+          TimeoutStopSec = 1;
+        };
       };
 
       systemd.user.targets.graphical-session.unitConfig = {

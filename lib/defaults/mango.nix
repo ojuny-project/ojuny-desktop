@@ -224,7 +224,14 @@ in
     tag_rule = [
       { id = 0; layout_name = "dwindle"; }
     ];
-    layer_rule = [ ];
+    layer_rule = [
+      {
+        layer_name = "ojuny-login-splash";
+        no_animation = 1;
+        no_blur = 1;
+        no_shadow = 1;
+      }
+    ];
     monitor_rule = [ ];
     device_rule = [ ];
   };
