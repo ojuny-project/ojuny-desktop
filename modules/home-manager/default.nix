@@ -266,6 +266,26 @@
             rel: src: lib.nameValuePair rel { source = src; }
           ) ojuny.configLinks) // {
             "ojuny/snap.conf".source = snapConfigFile;
+            "systemd/user/graphical-session.target.d/10-ojuny.conf".text = ''
+              [Unit]
+              StopWhenUnneeded=false
+              RefuseManualStart=false
+            '';
+            "systemd/user/xdg-desktop-portal.service.d/10-ojuny.conf".text = ''
+              [Unit]
+              X-RestartIfChanged=false
+              X-StopIfChanged=false
+            '';
+            "systemd/user/xdg-desktop-portal-gtk.service.d/10-ojuny.conf".text = ''
+              [Unit]
+              X-RestartIfChanged=false
+              X-StopIfChanged=false
+            '';
+            "systemd/user/xdg-desktop-portal-wlr.service.d/10-ojuny.conf".text = ''
+              [Unit]
+              X-RestartIfChanged=false
+              X-StopIfChanged=false
+            '';
           };
 
           home.activation.ojunyDuxFirstLaunch = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -288,6 +308,7 @@
               Documentation = [ "https://github.com/duxlabs-dev/dux-files" ];
               After = [ "graphical-session.target" ];
               PartOf = [ "graphical-session.target" ];
+              X-SwitchMethod = "keep-old";
             };
             Service = {
               Type = "simple";

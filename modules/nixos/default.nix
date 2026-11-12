@@ -177,6 +177,26 @@
         before = [ "xdg-desktop-autostart.target" ];
       };
 
+      systemd.user.targets.graphical-session.unitConfig = {
+        StopWhenUnneeded = lib.mkForce false;
+        RefuseManualStart = lib.mkForce false;
+      };
+
+      systemd.user.services.xdg-desktop-portal = {
+        stopIfChanged = false;
+        restartIfChanged = false;
+      };
+
+      systemd.user.services.xdg-desktop-portal-gtk = {
+        stopIfChanged = false;
+        restartIfChanged = false;
+      };
+
+      systemd.user.services.xdg-desktop-portal-wlr = {
+        stopIfChanged = false;
+        restartIfChanged = false;
+      };
+
       desktop.ojuny.mango.global = perKeyDefaults
         (mangoDefaults.global
           // (
@@ -278,6 +298,8 @@
         after = [ "graphical-session.target" ];
         partOf = [ "graphical-session.target" ];
         wantedBy = [ "graphical-session.target" ];
+        stopIfChanged = false;
+        restartIfChanged = false;
         serviceConfig = {
           Type = "simple";
           ExecStart = "${duxFiles}/bin/dfiles run --session --hidden --keep-running";
