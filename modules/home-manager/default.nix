@@ -45,6 +45,23 @@
       stylixAvailable = options ? stylix;
       useStylixTheme = cfg.stylix.enable && stylixAvailable;
       useFallbackTheme = !stylixAvailable;
+      splashColors =
+        if useStylixTheme then config.lib.stylix.colors else fallbackColors;
+      loginSplashAssets = pkgs.callPackage "${inputs.ojuny-login-splash}/nix/assets.nix" {
+        background = splashColors.base00;
+        foreground = splashColors.base05;
+        tipForeground = splashColors.base04;
+        tips = cfg.splash.tips;
+        targetFills = [
+          splashColors.base03
+          splashColors.base08
+          splashColors.base0D
+          splashColors.base0A
+        ];
+      };
+      loginSplash = pkgs.callPackage "${inputs.ojuny-login-splash}/nix/package.nix" {
+        assets = loginSplashAssets;
+      };
       wallpaperSet = import ../../lib/mk-wallpaper-set.nix { inherit lib pkgs; } {
         presets = wallpaperPresets;
         colors =
@@ -198,7 +215,13 @@
             };
           };
 
-          services.ojuny-login-splash.enable = lib.mkDefault true;
+          services.ojuny-login-splash = {
+            enable = lib.mkDefault true;
+            package = lib.mkDefault loginSplash;
+            showOnRebuild = cfg.splash.showOnRebuild;
+            fadeIn = cfg.splash.fadeIn;
+            fadeOut = cfg.splash.fadeOut;
+          };
 
           desktop.ojuny.mango.global = lib.mkIf (useStylixTheme || useFallbackTheme) (
             lib.mkDefault (

@@ -19,7 +19,6 @@
     duxDefaults = import ../../lib/defaults/dux.nix;
     barPresetDefaults = import ../../lib/defaults/bar-presets.nix;
     duxFiles = inputs.dux-files.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    loginSplash = inputs.ojuny-login-splash.packages.${pkgs.stdenv.hostPlatform.system}.default;
     fileManager = (import ../../lib/file-manager.nix { inherit lib pkgs; }).resolve {
       inherit (cfg) fileManager;
       inherit duxFiles;
@@ -38,6 +37,23 @@
     stylixAvailable = options ? stylix;
     useStylixTheme = cfg.stylix.enable && stylixAvailable;
     useFallbackTheme = !stylixAvailable;
+    splashColors =
+      if useStylixTheme then config.lib.stylix.colors else fallbackColors;
+    loginSplashAssets = pkgs.callPackage "${inputs.ojuny-login-splash}/nix/assets.nix" {
+      background = splashColors.base00;
+      foreground = splashColors.base05;
+      tipForeground = splashColors.base04;
+      tips = cfg.splash.tips;
+      targetFills = [
+        splashColors.base03
+        splashColors.base08
+        splashColors.base0D
+        splashColors.base0A
+      ];
+    };
+    loginSplash = pkgs.callPackage "${inputs.ojuny-login-splash}/nix/package.nix" {
+      assets = loginSplashAssets;
+    };
     wallpaperSet = import ../../lib/mk-wallpaper-set.nix { inherit lib pkgs; } {
       presets = wallpaperPresets;
       colors =
@@ -184,14 +200,28 @@
         after = [ "graphical-session-pre.target" ];
         before = [ "xdg-desktop-autostart.target" ];
         wantedBy = [ "mango-session.target" ];
+        restartIfChanged = cfg.splash.showOnRebuild;
+        stopIfChanged = false;
+        restartTriggers =
+          lib.mkIf cfg.splash.showOnRebuild [ "/run/current-system" ];
+        unitConfig.ConditionPathExists = "!%t/ojuny-login-splash.started";
         serviceConfig = {
           Type = "exec";
-          ExecStart = "${loginSplash}/bin/ojuny-login-splash --seconds 10";
+          ExecStartPre = "${pkgs.coreutils}/bin/touch %t/ojuny-login-splash.started";
+          ExecStart = "${loginSplash}/bin/ojuny-login-splash --seconds 10 --fade-in ${toString cfg.splash.fadeIn} --fade-out ${toString cfg.splash.fadeOut}";
           ExecStop = "${loginSplash}/bin/ojuny-login-splash --quit";
           Restart = "no";
           TimeoutStopSec = 1;
         };
       };
+
+      system.activationScripts.ojuny-login-splash =
+        lib.mkIf cfg.splash.showOnRebuild ''
+          for runtime in /run/user/*; do
+            [ -d "$runtime" ] || continue
+            rm -f "$runtime/ojuny-login-splash.started"
+          done
+        '';
 
       systemd.user.targets.graphical-session.unitConfig = {
         StopWhenUnneeded = lib.mkForce false;

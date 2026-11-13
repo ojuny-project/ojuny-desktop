@@ -5,7 +5,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 `lib.evalModules`. Internal options are omitted. Regenerate with
 `python3 scripts/gen-options.py`; CI fails when this file is stale.
 
-102 public options under `desktop.ojuny`.
+106 public options under `desktop.ojuny`.
 
 ## top level
 
@@ -118,6 +118,13 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 - `desktop.ojuny.mango.source` (`list of string`, default `[ ]`): Additional config files to source.
 - `desktop.ojuny.mango.switchbind` (`attribute set of (TOML value)`, default `{ }`): Switch bindings keyed by key mode, then by fold or unfold, with a dispatcher string such as "spawn,command".
 - `desktop.ojuny.mango.var` (`TOML value`, default `{ }`): Mango [var] variables.
+
+## splash
+
+- `desktop.ojuny.splash.fadeIn` (`floating point number`, default `0.3`): Asset fade-in duration in seconds. 0 disables it.
+- `desktop.ojuny.splash.fadeOut` (`floating point number`, default `0.3`): Asset and background fade-out duration in seconds before a timed exit. 0 disables it.
+- `desktop.ojuny.splash.showOnRebuild` (`boolean`, default `false`): Start the login splash after a rebuild. When false, the splash runs only at boot or login.
+- `desktop.ojuny.splash.tips` (`list of string`, default `[ ]`): Tips shown under the welcome text. One is chosen at random per login. Empty hides the subtext.
 
 ## stylix
 

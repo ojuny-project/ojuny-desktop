@@ -105,6 +105,29 @@ in
   options.desktop.ojuny = {
     enable = mkEnableOption "Ojuny Desktop (mangoWM + Dux Modular Shell)";
 
+    splash = {
+      showOnRebuild = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Start the login splash after a rebuild. When false, the splash runs only at boot or login.";
+      };
+      fadeIn = mkOption {
+        type = types.float;
+        default = 0.3;
+        description = "Asset fade-in duration in seconds. 0 disables it.";
+      };
+      fadeOut = mkOption {
+        type = types.float;
+        default = 0.3;
+        description = "Asset and background fade-out duration in seconds before a timed exit. 0 disables it.";
+      };
+      tips = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "Tips shown under the welcome text. One is chosen at random per login. Empty hides the subtext.";
+      };
+    };
+
     mango = {
       global = mkOption {
         type = types.toml;

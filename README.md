@@ -1,6 +1,6 @@
 # ojuny-desktop
 
-Ojuny Desktop packages MangoWM and Dux Modular Shell for NixOS. The `desktop.ojuny.*` options generate both configurations from one source, and the repository exports a NixOS module, a Home Manager module, and a nested session runner. The session starts `ojuny-login-splash` on `mango-session.target` and disables layer animation for the splash namespace.
+Ojuny Desktop packages MangoWM and Dux Modular Shell for NixOS. The `desktop.ojuny.*` options generate both configurations from one source, and the repository exports a NixOS module, a Home Manager module, and a nested session runner. The session starts `ojuny-login-splash` on `mango-session.target` and disables layer animation for the splash namespace. `desktop.ojuny.splash.*` controls rebuild starts, asset fades, and the random tips shown under the welcome text.
 
 Status: untested. No release tag exists. Applies to commit `34462aa`. The modules and the nested runner are described from the code; no end-to-end install is recorded as of 2026-11-03.
 
