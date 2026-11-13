@@ -1,0 +1,11 @@
+# Tests
+# Local test record for this repository.
+# Run against commit f969afb on 2026-11-13.
+# Device: ojuny test laptop, NixOS 26.11.20261111.d4f25a3, kernel 6.18.63.
+# Result: all listed tests passed.
+
+- PASS splash theming: the login splash uses the Stylix palette and the configured tip. Method: rebuild with `desktop.ojuny.splash.showOnRebuild = true` and `tips = [ "Ojuny splash test tip" ]`, capture the screen during the 10 second run, and read the unit's `--fade-in 0.300000 --fade-out 0.300000`. Evidence: RUN-04, `/tmp/opencode/splash1.png`.
+- PASS splash default: a rebuild does not restart the splash when `showOnRebuild` is off. Method: compare `systemctl --user show ojuny-login-splash -p ExecMainStartTimestamp` before and after a switch; the timestamp is unchanged and the service is inactive. Evidence: RUN-04.
+- PASS splash marker: the splash starts once per session unless a rebuild requests it. Method: check `/run/user/1000/ojuny-login-splash.started` is written by `ExecStartPre`, and that the activation script clears it only when `showOnRebuild` is enabled. Evidence: RUN-04.
+- PASS SESSION-06: portals survive a rebuild. Method: rebuild the system and check `xdg-desktop-portal`, `xdg-desktop-portal-gtk`, and `xdg-desktop-portal-wlr` stay active with no failed user units. Evidence: RUN-01.
+- PASS portal drop-ins: portal and dfiles units keep their running state when their unit files change. Method: inspect the drop-ins with `stopIfChanged=false` and `restartIfChanged=false`, then confirm across a switch. Evidence: RUN-01.
