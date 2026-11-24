@@ -218,6 +218,7 @@
           services.ojuny-login-splash = {
             enable = lib.mkDefault true;
             package = lib.mkDefault loginSplash;
+            seconds = cfg.splash.seconds;
             showOnRebuild = cfg.splash.showOnRebuild;
             fadeIn = cfg.splash.fadeIn;
             fadeOut = cfg.splash.fadeOut;

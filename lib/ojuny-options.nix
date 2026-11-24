@@ -111,6 +111,11 @@ in
         default = false;
         description = "Start the login splash after a rebuild. When false, the splash runs only at boot or login.";
       };
+      seconds = mkOption {
+        type = types.float;
+        default = 60.0;
+        description = "Fallback upper bound in seconds. The splash normally ends when the desktop is ready; this only prevents it from sticking.";
+      };
       fadeIn = mkOption {
         type = types.float;
         default = 0.3;

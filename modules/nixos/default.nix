@@ -208,7 +208,7 @@
         serviceConfig = {
           Type = "exec";
           ExecStartPre = "${pkgs.coreutils}/bin/touch %t/ojuny-login-splash.started";
-          ExecStart = "${loginSplash}/bin/ojuny-login-splash --seconds 10 --fade-in ${toString cfg.splash.fadeIn} --fade-out ${toString cfg.splash.fadeOut}";
+          ExecStart = "${loginSplash}/bin/ojuny-login-splash --seconds ${toString cfg.splash.seconds} --fade-in ${toString cfg.splash.fadeIn} --fade-out ${toString cfg.splash.fadeOut}";
           ExecStop = "${loginSplash}/bin/ojuny-login-splash --quit";
           Restart = "no";
           TimeoutStopSec = 1;
@@ -222,6 +222,10 @@
             rm -f "$runtime/ojuny-login-splash.started"
           done
         '';
+
+      desktop.ojuny.mango.exec = lib.mkAfter [
+        "${pkgs.bash}/bin/sh -c 'mmsg get all-layers 2>/dev/null | grep -q dms && systemctl --user stop ojuny-login-splash.service || true'"
+      ];
 
       systemd.user.targets.graphical-session.unitConfig = {
         StopWhenUnneeded = lib.mkForce false;
