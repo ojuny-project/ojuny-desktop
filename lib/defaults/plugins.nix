@@ -31,7 +31,7 @@ let
         storeSizeCommand = [
           "sh"
           "-c"
-          "du -sh /nix/store 2>/dev/null | cut -f1"
+          "sqlite3 /nix/var/nix/db/db.sqlite 'select sum(narSize) from ValidPaths' | numfmt --to=iec"
         ];
         gcCommand = [
           "sh"
@@ -49,7 +49,7 @@ let
           "git ls-remote https://github.com/NixOS/nixpkgs.git nixos-unstable 2>/dev/null | cut -c 1-7 || echo 'N/A'"
         ];
         nixpkgsChannel = "nixos-unstable";
-        updateInterval = 300;
+        updateInterval = 3600;
         rebuildCommand = [
           "sh"
           "-c"

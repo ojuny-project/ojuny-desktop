@@ -89,6 +89,7 @@ let
       wlr-utils
       ydotool
       jq
+      sqlite
       fzf
       eza
       glib
