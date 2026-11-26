@@ -3,8 +3,8 @@
   presets,
   colors ? null,
   userDirectory ? null,
-  selectedPreset ? "everforest",
-  defaultPreset ? "everforest",
+  selectedPreset ? "default",
+  defaultPreset ? "default",
   selectedImage ? null,
   cycleIncludeBuiltins ? true,
 }:

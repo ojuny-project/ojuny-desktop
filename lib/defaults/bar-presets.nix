@@ -79,9 +79,9 @@ let
 
     islandSatelliteHoverGap = 5;
 
-    islandHoverOpenDelay = 350;
+    islandHoverOpenDelay = 500;
 
-    islandHoverCloseDelay = 350;
+    islandHoverCloseDelay = 300;
 
     islandSpringStiffness = 760;
 
@@ -286,8 +286,8 @@ let
     innerPadding = 24;
     island = false;
     islandCompactThickness = 31;
-    islandHoverCloseDelay = 350;
-    islandHoverOpenDelay = 350;
+    islandHoverCloseDelay = 300;
+    islandHoverOpenDelay = 500;
     islandOuterGap = 3;
     islandSatelliteBackground = false;
     islandSatelliteGap = 4;
@@ -414,8 +414,8 @@ in
       innerPadding = 0;
       island = true;
       islandCompactThickness = 31;
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 3;
       islandSatelliteBackground = false;
       islandSatelliteGap = 4;
@@ -514,8 +514,8 @@ in
       innerPadding = 6;
       island = false;
       islandCompactThickness = 31;
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 3;
       islandSatelliteBackground = false;
       islandSatelliteGap = 4;
@@ -645,8 +645,8 @@ in
       innerPadding = -6;
       island = false;
       islandCompactThickness = 31;
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 3;
       islandSatelliteBackground = false;
       islandSatelliteGap = 4;
@@ -750,8 +750,8 @@ in
       innerPadding = 24;
       island = false;
       islandCompactThickness = 31;
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 3;
       islandSatelliteBackground = false;
       islandSatelliteGap = 4;
@@ -855,8 +855,8 @@ in
       innerPadding = 0;
       island = false;
       islandCompactThickness = 31;
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 3;
       islandSatelliteBackground = false;
       islandSatelliteGap = 4;
@@ -963,8 +963,8 @@ in
         }
       ];
       islandHomeVolumeDisplay = "both";
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 6;
       islandPalette = "default";
       islandPlacement = "edge";
@@ -1125,8 +1125,8 @@ in
         }
       ];
       islandHomeVolumeDisplay = "both";
-      islandHoverCloseDelay = 350;
-      islandHoverOpenDelay = 350;
+      islandHoverCloseDelay = 300;
+      islandHoverOpenDelay = 500;
       islandOuterGap = 6;
       islandPalette = "default";
       islandPlacement = "edge";

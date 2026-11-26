@@ -7,7 +7,7 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 - `desktop.ojuny.enable` (bool, default: false) — Whether to enable Ojuny Desktop (mangoWM + Dux Modular Shell).
 - `desktop.ojuny.defaultApps` (listOf package, default: []) — Packages added to the desktop session PATH so default keybinds can launch them.
 - `desktop.ojuny.stylix.enable` (bool, default: false) — Theme mango from imported stylix palette (requires stylix module).
-- `desktop.ojuny.wallpaper.preset` (enum, default: `everforest`) — Bundled wallpaper preset: `everforest`, `floyd`, `stripes`, `waves`, `abstract`, `retro`, `logo`, `city`. Every preset is generated with the active stylix palette.
+- `desktop.ojuny.wallpaper.preset` (enum, default: `default`) — Bundled wallpaper preset: `default`, `floyd`, `stripes`, `waves`, `abstract`, `retro`, `logo`, `city`. Every preset is generated with the active stylix palette.
 - `desktop.ojuny.wallpaper.image` (path or null, default: null) — Custom wallpaper image. When set, it overrides the preset and is used as-is.
 - `desktop.ojuny.wallpaper.userDirectory` (path or null, default: null) — Directory of user wallpaper images copied into the generated wallpaper directory.
 - `desktop.ojuny.wallpaper.cycleIncludeBuiltins` (bool, default: true) — Include the generated bundled presets when Dux Modular Shell cycles through wallpapers.
@@ -16,6 +16,13 @@ All options are under `desktop.ojuny.*`. This document describes every exposed o
 - `desktop.ojuny.fileManager.customPackage` (package or null, default: null) — Package installed when `package = "custom"`.
 - `desktop.ojuny.fileManager.customCommand` (string, default: `dfiles open`) — Command used by the file-manager keybind when `package = "custom"`.
 - `desktop.ojuny.fileManager.portal` (bool, default: true) — Register the Dux Files FileChooser portal backend when the package is dux-files.
+
+## splash
+
+- `desktop.ojuny.splash.fadeIn` (float, default: 0.3) — Asset fade-in duration in seconds. 0 disables it.
+- `desktop.ojuny.splash.fadeOut` (float, default: 0.3) — Asset fade-out duration before a timed exit. 0 disables it.
+- `desktop.ojuny.splash.showOnRebuild` (bool, default: false) — Legacy compatibility switch. A rebuild started through `ojuny rebuild` starts the splash after activation and stops it after the environment reload, so the build output stays visible.
+- `desktop.ojuny.splash.tips` (list of string, default: []) — Tips under the welcome text. One is chosen at random per login. Empty hides the subtext.
 
 ## mango
 - desktop.ojuny.mango.axisbind (type: see defaults/schema)
@@ -457,8 +464,8 @@ attrset keyed by bar id. Nested `leftWidgets`/`rightWidgets` are id-keyed attrse
     "islandGothCornerRadiusOverride": false,
     "islandGothCornerRadiusValue": 20,
     "islandGothCornersEnabled": false,
-    "islandHoverCloseDelay": 350,
-    "islandHoverOpenDelay": 350,
+    "islandHoverCloseDelay": 300,
+    "islandHoverOpenDelay": 500,
     "islandOuterGap": 3,
     "islandSatelliteGap": 8,
     "islandSatelliteHoverGap": 5,

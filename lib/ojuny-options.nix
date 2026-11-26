@@ -392,7 +392,7 @@ in
     wallpaper = {
       preset = mkOption {
         type = types.enum (builtins.attrNames wallpaperPresets);
-        default = "everforest";
+        default = "default";
         description = "Bundled wallpaper preset. Every preset is generated with the active stylix palette.";
       };
       image = mkOption {

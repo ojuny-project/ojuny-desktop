@@ -13,7 +13,7 @@
     in
     {
       checks.wallpaper-set = pkgs.runCommand "check-ojuny-wallpaper-set" { } ''
-        test -f ${wallpaperSet.directory}/builtin/everforest.png
+        test -f ${wallpaperSet.directory}/builtin/default.png
         test -f ${wallpaperSet.directory}/builtin/city.png
         test -e ${wallpaperSet.directory}/builtin
         test -f ${wallpaperSet.selected}

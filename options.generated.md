@@ -134,5 +134,5 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 
 - `desktop.ojuny.wallpaper.cycleIncludeBuiltins` (`boolean`, default `true`): Include the generated bundled presets when Dux Modular Shell cycles through wallpapers.
 - `desktop.ojuny.wallpaper.image` (`null or absolute path`, default `null`): Custom wallpaper image. When set, it overrides the selected preset and is used as-is.
-- `desktop.ojuny.wallpaper.preset` (`one of "abstract", "city", "everforest", "floyd", "logo", "retro", "stripes", "waves"`, default `"everforest"`): Bundled wallpaper preset. Every preset is generated with the active stylix palette.
+- `desktop.ojuny.wallpaper.preset` (`one of "abstract", "city", "default", "floyd", "logo", "retro", "stripes", "waves"`, default `"default"`): Bundled wallpaper preset. Every preset is generated with the active stylix palette.
 - `desktop.ojuny.wallpaper.userDirectory` (`null or absolute path`, default `null`): Directory of user wallpaper images to include in the generated wallpaper directory.

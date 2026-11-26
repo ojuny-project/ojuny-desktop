@@ -1,5 +1,5 @@
 {
-  everforest = {
+  default = {
     label = "Default";
     file = ./wallpapers/preset-default.png;
     fills = [

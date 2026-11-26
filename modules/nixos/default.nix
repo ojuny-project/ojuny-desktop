@@ -200,10 +200,7 @@
         after = [ "graphical-session-pre.target" ];
         before = [ "xdg-desktop-autostart.target" ];
         wantedBy = [ "mango-session.target" ];
-        restartIfChanged = cfg.splash.showOnRebuild;
         stopIfChanged = false;
-        restartTriggers =
-          lib.mkIf cfg.splash.showOnRebuild [ "/run/current-system" ];
         unitConfig.ConditionPathExists = "!%t/ojuny-login-splash.started";
         serviceConfig = {
           Type = "exec";
@@ -214,18 +211,6 @@
           TimeoutStopSec = 1;
         };
       };
-
-      system.activationScripts.ojuny-login-splash =
-        lib.mkIf cfg.splash.showOnRebuild ''
-          for runtime in /run/user/*; do
-            [ -d "$runtime" ] || continue
-            rm -f "$runtime/ojuny-login-splash.started"
-          done
-        '';
-
-      desktop.ojuny.mango.exec = lib.mkAfter [
-        "${pkgs.bash}/bin/sh -c 'if mmsg get all-layers 2>/dev/null | grep -q dms; then (${pkgs.coreutils}/bin/sleep 5; systemctl --user stop ojuny-login-splash.service) >/dev/null 2>&1 & fi'"
-      ];
 
       systemd.user.targets.graphical-session.unitConfig = {
         StopWhenUnneeded = lib.mkForce false;
