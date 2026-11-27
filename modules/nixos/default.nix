@@ -54,6 +54,36 @@
     loginSplash = pkgs.callPackage "${inputs.ojuny-login-splash}/nix/package.nix" {
       assets = loginSplashAssets;
     };
+    loginSplashReady = pkgs.writeShellScript "ojuny-login-splash-ready" ''
+      export PATH=${lib.makeBinPath [ pkgs.coreutils ]}
+      set -eu
+
+      splash="${loginSplash}/bin/ojuny-login-splash"
+      deadline=$(( $(date +%s) + ${toString (builtins.ceil cfg.splash.seconds)} ))
+
+      while [ "$(date +%s)" -lt "$deadline" ]; do
+          if "${duxPackage}/bin/dms" version >/dev/null 2>&1; then
+              "$splash" --quit
+              exit 0
+          fi
+          sleep 0.2
+      done
+    '';
+    swayOutput = name: output:
+      if !output.enabled then
+        "output ${name} disable"
+      else
+        "output ${name}"
+        + lib.optionalString (output.width > 0 && output.height > 0 && output.refresh > 0)
+          " mode ${toString output.width}x${toString output.height}@${toString output.refresh}Hz"
+        + " position ${toString output.xPos},${toString output.yPos}"
+        + " scale ${toString output.scale}"
+        + " transform ${output.transform}";
+    greeterOutputs =
+      if options ? services.nix-settings-gui.monitors then
+        lib.mapAttrsToList swayOutput config.services.nix-settings-gui.monitors
+      else
+        [ ];
     wallpaperSet = import ../../lib/mk-wallpaper-set.nix { inherit lib pkgs; } {
       presets = wallpaperPresets;
       colors =
@@ -84,10 +114,11 @@
       inherit lib pkgs;
       configFile = ghosttyConfig;
     };
+    duxPackage = inputs.dux-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
     ojuny = import ../../lib/mk-ojuny.nix {
       inherit lib pkgs;
       mango = inputs.mangowm.packages.${pkgs.stdenv.hostPlatform.system}.mango;
-      dux = inputs.dux-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      dux = duxPackage;
       quickshell = inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.quickshell;
       settings = {
         inherit (cfg) mango;
@@ -212,6 +243,19 @@
         };
       };
 
+      systemd.user.services.ojuny-login-splash-ready = {
+        description = "Stop the Ojuny login splash when DMS is ready";
+        partOf = [ "mango-session.target" ];
+        after = [ "ojuny-login-splash.service" ];
+        wantedBy = [ "mango-session.target" ];
+        unitConfig.ConditionPathExists = "%t/ojuny-login-splash.started";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${loginSplashReady}";
+          TimeoutStartSec = "${toString (builtins.ceil (cfg.splash.seconds + 5))}";
+        };
+      };
+
       systemd.user.targets.graphical-session.unitConfig = {
         StopWhenUnneeded = lib.mkForce false;
         RefuseManualStart = lib.mkForce false;
@@ -285,7 +329,7 @@
         userWallpapers = wallpaperSet.userWallpapers;
       };
 
-      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap ] ++ cfg.defaultApps;
+      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap loginSplash ] ++ cfg.defaultApps;
 
       environment.etc."ojuny/snap.conf".source = snapConfigFile;
 
@@ -364,6 +408,8 @@
       }];
     } // lib.optionalAttrs (options ? stylix) {
       stylix.image = lib.mkIf cfg.stylix.enable (lib.mkDefault stylixWallpaper);
+    } // lib.optionalAttrs (options ? programs.dms-greeter.compositor.customConfig) {
+      programs.dms-greeter.compositor.customConfig = lib.concatStringsSep "\n" greeterOutputs;
     });
   };
 }

@@ -5,7 +5,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 `lib.evalModules`. Internal options are omitted. Regenerate with
 `python3 scripts/gen-options.py`; CI fails when this file is stale.
 
-106 public options under `desktop.ojuny`.
+107 public options under `desktop.ojuny`.
 
 ## top level
 
@@ -47,9 +47,9 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 - `desktop.ojuny.dux.barPreset` (`one of "caelestia", "default", "goth", "none", "sidebar-left", "sidebar-right", "simple-bar", "simple-island", "status", "taskbar", "custom"`, default `"default"`): Active bar preset. `custom` uses `barConfigs.custom`, so a downstream repo can override it.
 - `desktop.ojuny.dux.clipboardSettings` (`TOML value`, default `{ autoClearDays = 1; clearAtStartup = true; disableHistory = false; disablePersist = false; disabled = false; maxEntrySize = 5242880; maxHistory = 25; }`): Dux Modular Shell clipboard settings (clsettings.json).
 - `desktop.ojuny.dux.controlCenterWidgets` (`attribute set of (TOML value)`, default `{ battery = { _order = 20; col = 4; enabled = true; h = 1; row = 0; w = 1; }; bluetooth = { _order = 100; col = 3; enabled = true; h = 1; row = 2; …`): Control-center widgets keyed by id. Each entry may set `_order` (int, default 1000).
-- `desktop.ojuny.dux.dashCards` (`attribute set of (TOML value)`, default `{ calendar = { _order = 40; col = 0; h = 3; row = 1; w = 3; }; clock = { _order = 10; col = 2; h = 1; row = 0; w = 1; }; media = { _order = 50; …`): Dashboard cards keyed by id. Each entry may set `_order` (int, default 1000).
-- `desktop.ojuny.dux.dashOptions` (`TOML value`, default `{ calendar = { weekends = true; }; media = { playerStyle = "material"; }; weather = { widgets = { conditions = { _order = 10; city = false; col = 0;…`): Dashboard options. `weather.widgets` is an id-keyed attrset (with optional `_order`).
-- `desktop.ojuny.dux.dashTabs` (`attribute set of (TOML value)`, default `{ media = { _order = 20; enabled = true; }; notifications = { _order = 60; enabled = true; }; overview = { _order = 10; enabled = false; }; wallpaper = { _ord…`): Dashboard tabs keyed by id. Each entry may set `_order` (int, default 1000).
+- `desktop.ojuny.dux.dashCards` (`attribute set of (TOML value)`, default `{ calendar = { _order = 40; col = 0; h = 3; row = 1; w = 3; weekends = true; }; clock = { _order = 10; col = 2; h = 1; row = 0; w = 1; }; media = …`): Dashboard cards keyed by id. Each entry may set `_order` (int, default 1000).
+- `desktop.ojuny.dux.dashOptions` (`TOML value`, default `{ battery = { color = "level"; health = false; style = "solid"; tone = ""; }; clock = { weight = 0; }; cpu = { temperature = true; tone = ""; trend = true; …`): Dashboard options. `weather.widgets` is an id-keyed attrset (with optional `_order`).
+- `desktop.ojuny.dux.dashTabs` (`attribute set of (TOML value)`, default `{ media = { _order = 20; enabled = true; }; notifications = { _order = 60; enabled = true; }; overview = { _order = 10; enabled = true; }; wallpaper = { _orde…`): Dashboard tabs keyed by id. Each entry may set `_order` (int, default 1000).
 - `desktop.ojuny.dux.dockConfigs` (`attribute set of (TOML value)`, default `{ dock = { _order = 10; autoHide = false; borderColor = "secondary"; borderEnabled = true; borderOpacity = 1; borderThickness = 1; bottomGap = 0; editOnRightClick = f…`): Dock configurations keyed by id. Each entry may set `_order` (int, default 1000). Nested `widgets` is itself an id-keyed attrset (with optional `_order`).
 - `desktop.ojuny.dux.managePluginSettings` (`boolean`, default `true`): Whether to generate plugin_settings.json from dux.plugins.
 - `desktop.ojuny.dux.plugins` (`attribute set of (submodule)`, default `{ }`): Dux Modular Shell plugins, keyed by plugin name.
@@ -99,7 +99,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 - `desktop.ojuny.mango.gesturebind.<name>.<name>.modifier` (`list of string`, default `[ "SUPER" ]`)
 - `desktop.ojuny.mango.gesturebind.<name>.<name>.subcat` (`string`, default `""`): Cheatsheet category used to sort within the group. Empty omits it.
 - `desktop.ojuny.mango.global` (`TOML value`, default `{ allow_lock_transparent = 1; allow_shortcuts_inhibit = 1; animation_duration_close = 300; animation_duration_focus = 200; animation_duration_move = 500; animation_duration_open = 400; a…`): Mango [global] settings (nested attrs are flattened with underscores).
-- `desktop.ojuny.mango.mousebind` (`attribute set of attribute set of (submodule)`, default `{ default = { maximize = { args = "0"; description = "Maximize window"; dispatcher = "togglemaximizescreen"; group = "Mouse"; keys = [ "btn_middle" ];…`): Mouse button bindings, grouped by mode then by name.
+- `desktop.ojuny.mango.mousebind` (`attribute set of attribute set of (submodule)`, default `{ default = { maximize = { args = "ojuny-middle-click maximize zoom"; description = "Apply the layout action and pass the middle click through"; dispatcher = "spawn_shell"; …`): Mouse button bindings, grouped by mode then by name.
 - `desktop.ojuny.mango.mousebind.<name>.<name>.args` (`(list of string) or string`, default `[ ]`)
 - `desktop.ojuny.mango.mousebind.<name>.<name>.description` (`string`, default `""`)
 - `desktop.ojuny.mango.mousebind.<name>.<name>.dispatcher` (`string`, default `"spawn"`)
@@ -123,6 +123,7 @@ Generated from the option declarations in `lib/ojuny-options.nix` through
 
 - `desktop.ojuny.splash.fadeIn` (`floating point number`, default `0.3`): Asset fade-in duration in seconds. 0 disables it.
 - `desktop.ojuny.splash.fadeOut` (`floating point number`, default `0.3`): Asset and background fade-out duration in seconds before a timed exit. 0 disables it.
+- `desktop.ojuny.splash.seconds` (`floating point number`, default `60.0`): Fallback upper bound in seconds. The splash normally ends when the desktop is ready; this only prevents it from sticking.
 - `desktop.ojuny.splash.showOnRebuild` (`boolean`, default `false`): Start the login splash after a rebuild. When false, the splash runs only at boot or login.
 - `desktop.ojuny.splash.tips` (`list of string`, default `[ ]`): Tips shown under the welcome text. One is chosen at random per login. Empty hides the subtext.
 

@@ -393,7 +393,7 @@
     notifications = {
       col = 0;
       h = 2;
-      row = 4;
+      row = 5;
       w = 6;
       _order = 30;
     };
@@ -402,20 +402,60 @@
       h = 3;
       row = 1;
       w = 3;
+      weekends = true;
       _order = 40;
     };
     media = {
-      col = 3;
+      col = 0;
       h = 1;
-      row = 3;
-      w = 3;
+      row = 4;
+      w = 6;
       _order = 50;
     };
     sysmon = {
       col = 3;
-      h = 1;
+      h = 3;
       row = 1;
       w = 3;
+      config = {
+        metrics = [
+          {
+            device = "cpu";
+            graph = true;
+            on = true;
+            vals = [ "usage" "temp" "clock" ];
+          }
+          {
+            device = "memory";
+            graph = true;
+            on = true;
+            vals = [ "used" "swap" ];
+          }
+          {
+            device = "disk:nvme0n1";
+            graph = true;
+            on = true;
+            vals = [ "space" "read" "write" ];
+          }
+          {
+            device = "net";
+            graph = false;
+            on = true;
+            vals = [ "down" "up" ];
+          }
+          {
+            device = "gpu:0000:01:00.0";
+            graph = false;
+            on = true;
+            vals = [ "usage" "temp" "vram" "power" ];
+          }
+        ];
+        layout = "bars";
+        showHeader = false;
+        barOrientation = "horizontal";
+        barNames = true;
+        barStyle = "tiles";
+      };
       _order = 60;
     };
     network = {
@@ -460,75 +500,154 @@
     };
   };
   dashOptions = {
-    calendar = {
-      weekends = true;
+    battery = {
+      color = "level";
+      health = false;
+      style = "solid";
+      tone = "";
+    };
+    clock = {
+      weight = 0;
+    };
+    cpu = {
+      temperature = true;
+      tone = "";
+      trend = true;
+    };
+    disk = {
+      io = false;
+      tone = "";
+      trend = true;
     };
     media = {
+      albumArtAccent = true;
+      albumArtBackdrop = true;
+      animatedArt = false;
+      artStyle = "rounded";
+      deviceName = true;
+      lyrics = true;
       playerStyle = "material";
+      seekbar = true;
+      smoothLyrics = true;
+      titleFont = "";
+      waveProgress = true;
     };
-    weather = {
-      widgets = {
-        conditions = {
-          city = false;
-          col = 0;
-          h = 2;
-          row = 2;
-          tone = "primary";
-          w = 2;
-          _order = 10;
-        };
-        hourly = {
-          col = 2;
-          forecast = "chart";
-          h = 2;
-          row = 2;
-          w = 2;
-          _order = 20;
-        };
-        humidity = {
-          col = 2;
-          graphics = true;
-          h = 2;
-          row = 4;
-          tone = "";
-          w = 1;
-          _order = 30;
-        };
-        wind = {
-          col = 3;
-          graphics = true;
-          h = 2;
-          row = 4;
-          tone = "";
-          w = 1;
-          _order = 40;
-        };
-        "daily" = {
-          col = 0;
-          forecast = "chart";
-          h = 2;
-          row = 0;
-          w = 4;
-          _order = 50;
-        };
-        precipitation = {
-          col = 1;
-          graphics = true;
-          h = 2;
-          row = 4;
-          tone = "";
-          w = 1;
-          _order = 60;
-        };
-        uv = {
-          col = 0;
-          graphics = true;
-          h = 2;
-          row = 4;
-          tone = "";
-          w = 1;
-          _order = 70;
-        };
+    memory = {
+      swap = false;
+      tone = "";
+      trend = true;
+    };
+    network = {
+      tone = "primary";
+      trend = true;
+    };
+    sysmon = {
+      temperature = true;
+      tone = "primary";
+    };
+    user = {
+      badge = true;
+      compositor = true;
+      hostname = true;
+      uptime = true;
+    };
+    wallpaper = {
+      columns = 4;
+      filename = true;
+      layout = "grid";
+      rows = 4;
+    };
+    overview = {
+      panelRows = 7;
+    };
+    weather.widgets = {
+      conditions = {
+        city = false;
+        col = 0;
+        h = 2;
+        row = 2;
+        tone = "primary";
+        w = 2;
+        _order = 10;
+      };
+      daily = {
+        col = 0;
+        forecast = "chart";
+        h = 2;
+        row = 0;
+        tone = "primary";
+        w = 4;
+        _order = 20;
+      };
+      hourly = {
+        col = 2;
+        forecast = "chart";
+        h = 2;
+        row = 2;
+        tone = "primary";
+        w = 2;
+        _order = 30;
+      };
+      humidity = {
+        col = 2;
+        graphics = true;
+        h = 2;
+        row = 4;
+        tone = "";
+        w = 1;
+        _order = 40;
+      };
+      moon = {
+        col = 0;
+        h = 2;
+        row = 6;
+        tone = "primary";
+        w = 1;
+        _order = 50;
+      };
+      precipitation = {
+        col = 1;
+        graphics = true;
+        h = 2;
+        row = 4;
+        tone = "";
+        w = 1;
+        _order = 60;
+      };
+      readings = {
+        col = 2;
+        graphics = true;
+        h = 2;
+        row = 6;
+        tone = "primary";
+        w = 2;
+        _order = 70;
+      };
+      sun = {
+        col = 1;
+        h = 2;
+        row = 6;
+        tone = "primary";
+        w = 1;
+        _order = 80;
+      };
+      uv = {
+        col = 0;
+        graphics = true;
+        h = 2;
+        row = 4;
+        tone = "";
+        w = 1;
+        _order = 90;
+      };
+      wind = {
+        col = 3;
+        graphics = true;
+        h = 2;
+        row = 4;
+        tone = "";
+        w = 1;
+        _order = 100;
       };
     };
   };

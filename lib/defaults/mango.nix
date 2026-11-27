@@ -682,9 +682,9 @@ in
       maximize = {
         modifier = [ ];
         keys = [ "btn_middle" ];
-        dispatcher = "togglemaximizescreen";
-        args = "0";
-        description = "Maximize window";
+        dispatcher = "spawn_shell";
+        args = "ojuny-middle-click maximize zoom";
+        description = "Apply the layout action and pass the middle click through";
         group = "Mouse";
         subcat = "";
       };

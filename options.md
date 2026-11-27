@@ -812,7 +812,8 @@ attrset keyed by card id.
     "col": 0,
     "h": 3,
     "row": 1,
-    "w": 3
+    "w": 3,
+    "weekends": true
   },
   "clock": {
     "_order": 10,
@@ -823,10 +824,10 @@ attrset keyed by card id.
   },
   "media": {
     "_order": 50,
-    "col": 3,
+    "col": 0,
     "h": 1,
-    "row": 3,
-    "w": 3
+    "row": 4,
+    "w": 6
   },
   "network": {
     "_order": 70,
@@ -839,15 +840,73 @@ attrset keyed by card id.
     "_order": 30,
     "col": 0,
     "h": 2,
-    "row": 4,
+    "row": 5,
     "w": 6
   },
   "sysmon": {
     "_order": 60,
     "col": 3,
-    "h": 1,
+    "h": 3,
     "row": 1,
-    "w": 3
+    "w": 3,
+    "config": {
+      "metrics": [
+        {
+          "device": "cpu",
+          "graph": true,
+          "on": true,
+          "vals": [
+            "usage",
+            "temp",
+            "clock"
+          ]
+        },
+        {
+          "device": "memory",
+          "graph": true,
+          "on": true,
+          "vals": [
+            "used",
+            "swap"
+          ]
+        },
+        {
+          "device": "disk:nvme0n1",
+          "graph": true,
+          "on": true,
+          "vals": [
+            "space",
+            "read",
+            "write"
+          ]
+        },
+        {
+          "device": "net",
+          "graph": false,
+          "on": true,
+          "vals": [
+            "down",
+            "up"
+          ]
+        },
+        {
+          "device": "gpu:0000:01:00.0",
+          "graph": false,
+          "on": true,
+          "vals": [
+            "usage",
+            "temp",
+            "vram",
+            "power"
+          ]
+        }
+      ],
+      "layout": "bars",
+      "showHeader": false,
+      "barOrientation": "horizontal",
+      "barNames": true,
+      "barStyle": "tiles"
+    }
   },
   "user": {
     "_order": 80,
@@ -882,7 +941,7 @@ attrset keyed by tab id.
   },
   "overview": {
     "_order": 10,
-    "enabled": false
+    "enabled": true
   },
   "wallpaper": {
     "_order": 30,
@@ -905,11 +964,65 @@ attrset; `weather.widgets` is an id-keyed attrset.
 
 ```nix
 {
-  "calendar": {
-    "weekends": true
+  "battery": {
+    "color": "level",
+    "health": false,
+    "style": "solid",
+    "tone": ""
+  },
+  "clock": {
+    "weight": 0
+  },
+  "cpu": {
+    "temperature": true,
+    "tone": "",
+    "trend": true
+  },
+  "disk": {
+    "io": false,
+    "tone": "",
+    "trend": true
   },
   "media": {
-    "playerStyle": "material"
+    "albumArtAccent": true,
+    "albumArtBackdrop": true,
+    "animatedArt": false,
+    "artStyle": "rounded",
+    "deviceName": true,
+    "lyrics": true,
+    "playerStyle": "material",
+    "seekbar": true,
+    "smoothLyrics": true,
+    "titleFont": "",
+    "waveProgress": true
+  },
+  "memory": {
+    "swap": false,
+    "tone": "",
+    "trend": true
+  },
+  "network": {
+    "tone": "primary",
+    "trend": true
+  },
+  "overview": {
+    "panelRows": 7
+  },
+  "sysmon": {
+    "temperature": true,
+    "tone": "primary"
+  },
+  "user": {
+    "badge": true,
+    "compositor": true,
+    "hostname": true,
+    "uptime": true
+  },
+  "wallpaper": {
+    "columns": 4,
+    "filename": true,
+    "layout": "grid",
+    "rows": 4
   },
   "weather": {
     "widgets": {
@@ -923,28 +1036,38 @@ attrset; `weather.widgets` is an id-keyed attrset.
         "w": 2
       },
       "daily": {
-        "_order": 50,
+        "_order": 20,
         "col": 0,
         "forecast": "chart",
         "h": 2,
         "row": 0,
+        "tone": "primary",
         "w": 4
       },
       "hourly": {
-        "_order": 20,
+        "_order": 30,
         "col": 2,
         "forecast": "chart",
         "h": 2,
         "row": 2,
+        "tone": "primary",
         "w": 2
       },
       "humidity": {
-        "_order": 30,
+        "_order": 40,
         "col": 2,
         "graphics": true,
         "h": 2,
         "row": 4,
         "tone": "",
+        "w": 1
+      },
+      "moon": {
+        "_order": 50,
+        "col": 0,
+        "h": 2,
+        "row": 6,
+        "tone": "primary",
         "w": 1
       },
       "precipitation": {
@@ -956,8 +1079,25 @@ attrset; `weather.widgets` is an id-keyed attrset.
         "tone": "",
         "w": 1
       },
-      "uv": {
+      "readings": {
         "_order": 70,
+        "col": 2,
+        "graphics": true,
+        "h": 2,
+        "row": 6,
+        "tone": "primary",
+        "w": 2
+      },
+      "sun": {
+        "_order": 80,
+        "col": 1,
+        "h": 2,
+        "row": 6,
+        "tone": "primary",
+        "w": 1
+      },
+      "uv": {
+        "_order": 90,
         "col": 0,
         "graphics": true,
         "h": 2,
@@ -966,7 +1106,7 @@ attrset; `weather.widgets` is an id-keyed attrset.
         "w": 1
       },
       "wind": {
-        "_order": 40,
+        "_order": 100,
         "col": 3,
         "graphics": true,
         "h": 2,
