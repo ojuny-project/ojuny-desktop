@@ -59,12 +59,17 @@
       set -eu
 
       splash="${loginSplash}/bin/ojuny-login-splash"
-      deadline=$(( $(date +%s) + ${toString (builtins.ceil cfg.splash.seconds)} ))
+      stamp="''${XDG_RUNTIME_DIR:-/tmp}/ojuny-shell-reloaded"
+      started="$(date +%s)"
+      deadline=$(( started + ${toString (builtins.ceil cfg.splash.seconds)} ))
 
       while [ "$(date +%s)" -lt "$deadline" ]; do
-          if "${duxPackage}/bin/dms" version >/dev/null 2>&1; then
-              "$splash" --quit
-              exit 0
+          if [ -f "$stamp" ]; then
+              modified="$(stat -c %Y "$stamp" 2>/dev/null || printf 0)"
+              if [ "$modified" -ge $((started - 2)) ]; then
+                  "$splash" --quit
+                  exit 0
+              fi
           fi
           sleep 0.2
       done
@@ -232,10 +237,12 @@
         before = [ "xdg-desktop-autostart.target" ];
         wantedBy = [ "mango-session.target" ];
         stopIfChanged = false;
-        unitConfig.ConditionPathExists = "!%t/ojuny-login-splash.started";
+        unitConfig = lib.optionalAttrs (!cfg.splash.showOnRebuild) {
+          ConditionPathExists = "!%t/ojuny-login-splash.started";
+        };
         serviceConfig = {
           Type = "exec";
-          ExecStartPre = "${pkgs.coreutils}/bin/touch %t/ojuny-login-splash.started";
+          ExecStartPre = lib.mkIf (!cfg.splash.showOnRebuild) "${pkgs.coreutils}/bin/touch %t/ojuny-login-splash.started";
           ExecStart = "${loginSplash}/bin/ojuny-login-splash --seconds ${toString cfg.splash.seconds} --fade-in ${toString cfg.splash.fadeIn} --fade-out ${toString cfg.splash.fadeOut}";
           ExecStop = "${loginSplash}/bin/ojuny-login-splash --quit";
           Restart = "no";
@@ -248,7 +255,9 @@
         partOf = [ "mango-session.target" ];
         after = [ "ojuny-login-splash.service" ];
         wantedBy = [ "mango-session.target" ];
-        unitConfig.ConditionPathExists = "%t/ojuny-login-splash.started";
+        unitConfig = lib.optionalAttrs (!cfg.splash.showOnRebuild) {
+          ConditionPathExists = "%t/ojuny-login-splash.started";
+        };
         serviceConfig = {
           Type = "oneshot";
           ExecStart = "${loginSplashReady}";
