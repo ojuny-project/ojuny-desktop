@@ -259,9 +259,9 @@
           ConditionPathExists = "%t/ojuny-login-splash.started";
         };
         serviceConfig = {
-          Type = "oneshot";
+          Type = "simple";
           ExecStart = "${loginSplashReady}";
-          TimeoutStartSec = "${toString (builtins.ceil (cfg.splash.seconds + 5))}";
+          Restart = "no";
         };
       };
 
