@@ -59,18 +59,16 @@
       set -eu
 
       splash="${loginSplash}/bin/ojuny-login-splash"
-      stamp="''${XDG_RUNTIME_DIR:-/tmp}/ojuny-shell-reloaded"
-      started="$(date +%s)"
-      deadline=$(( started + ${toString (builtins.ceil cfg.splash.seconds)} ))
+      runtime="''${XDG_RUNTIME_DIR:-/tmp}"
+      deadline=$(( $(date +%s) + ${toString (builtins.ceil cfg.splash.seconds)} ))
 
       while [ "$(date +%s)" -lt "$deadline" ]; do
-          if [ -f "$stamp" ]; then
-              modified="$(stat -c %Y "$stamp" 2>/dev/null || printf 0)"
-              if [ "$modified" -ge $((started - 2)) ]; then
+          for sock in "$runtime"/danklinux*.sock; do
+              if [ -S "$sock" ]; then
                   "$splash" --quit
                   exit 0
               fi
-          fi
+          done
           sleep 0.2
       done
     '';
@@ -338,7 +336,7 @@
         userWallpapers = wallpaperSet.userWallpapers;
       };
 
-      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap loginSplash ] ++ cfg.defaultApps;
+      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap ojuny.configLinker loginSplash ] ++ cfg.defaultApps;
 
       environment.etc."ojuny/snap.conf".source = snapConfigFile;
 
@@ -352,7 +350,7 @@
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          ExecStart = "${ojuny.configLinker}/bin/ojuny-config";
+          ExecStart = "${ojuny.configLinker}/bin/ojuny-config --seed";
         };
         restartTriggers =
           lib.attrValues ojuny.configLinks

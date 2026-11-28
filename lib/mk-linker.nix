@@ -23,6 +23,7 @@ pkgs.writeShellApplication {
     }
 
     mark_changelog_seen() {
+      :
       ${lib.optionalString (changelogMarker != "") ''
         install -d -m 0755 "$configHome/dms"
         touch "$configHome/dms/"${lib.escapeShellArg changelogMarker}
@@ -30,20 +31,20 @@ pkgs.writeShellApplication {
     }
 
     seed_session() {
+      :
       ${lib.optionalString (duxSessionFile != null) ''
         stateHome="''${XDG_STATE_HOME:-$HOME/.local/state}"
         target="$stateHome/dms/session.json"
         stamp="$stateHome/dms/.ojuny-session-source"
         source=${lib.escapeShellArg duxSessionFile}
         install -d -m 0755 "$stateHome/dms"
-        if [ -L "$target" ] || [ ! -e "$target" ] || [ "$(cat "$stamp" 2>/dev/null)" != "$source" ]; then
+        if [ -L "$target" ] || [ ! -e "$target" ] || ! cmp -s "$source" "$target"; then
           rm -f "$target"
           install -m 0644 "$source" "$target"
-          printf '%s\n' "$source" > "$stamp"
-          chmod 0644 "$stamp"
-        else
-          chmod u+w "$target" 2>/dev/null || true
         fi
+        printf '%s\n' "$source" > "$stamp"
+        chmod 0644 "$stamp"
+        chmod u+w "$target" 2>/dev/null || true
       ''}
     }
 

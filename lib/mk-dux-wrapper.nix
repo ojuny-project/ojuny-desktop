@@ -15,7 +15,11 @@ pkgs.writeShellApplication {
   text = ''
     ${lib.optionalString (configLinker != null) ''
       if [ "''${1:-}" = "run" ]; then
-        ${configLinker}/bin/ojuny-config --seed
+        if [ -x /run/current-system/sw/bin/ojuny-config ]; then
+          /run/current-system/sw/bin/ojuny-config --seed
+        else
+          ${configLinker}/bin/ojuny-config --seed
+        fi
       fi
     ''}
     exec ${dux}/bin/dms "$@"
