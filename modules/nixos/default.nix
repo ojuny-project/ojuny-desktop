@@ -54,24 +54,19 @@
     loginSplash = pkgs.callPackage "${inputs.ojuny-login-splash}/nix/package.nix" {
       assets = loginSplashAssets;
     };
-    loginSplashReady = pkgs.writeShellScript "ojuny-login-splash-ready" ''
-      export PATH=${lib.makeBinPath [ pkgs.coreutils ]}
-      set -eu
-
-      splash="${loginSplash}/bin/ojuny-login-splash"
-      runtime="''${XDG_RUNTIME_DIR:-/tmp}"
-      deadline=$(( $(date +%s) + ${toString (builtins.ceil cfg.splash.seconds)} ))
-
-      while [ "$(date +%s)" -lt "$deadline" ]; do
-          for sock in "$runtime"/danklinux*.sock; do
-              if [ -S "$sock" ]; then
-                  "$splash" --quit
-                  exit 0
-              fi
-          done
-          sleep 0.2
-      done
-    '';
+    splashQuit = pkgs.writeShellApplication {
+      name = "ojuny-splash-quit";
+      runtimeInputs = [
+        pkgs.coreutils
+        pkgs.jq
+      ];
+      text = ''
+        sleep "''${OJUNY_SPLASH_QUIT_DELAY:-3}"
+        mmsg get all-layers 2>/dev/null |
+          jq -e '.layers[] | select(.name | startswith("dms:"))' >/dev/null 2>&1 || exit 0
+        exec ${loginSplash}/bin/ojuny-login-splash --quit
+      '';
+    };
     swayOutput = name: output:
       if !output.enabled then
         "output ${name} disable"
@@ -248,21 +243,6 @@
         };
       };
 
-      systemd.user.services.ojuny-login-splash-ready = {
-        description = "Stop the Ojuny login splash when DMS is ready";
-        partOf = [ "mango-session.target" ];
-        after = [ "ojuny-login-splash.service" ];
-        wantedBy = [ "mango-session.target" ];
-        unitConfig = lib.optionalAttrs (!cfg.splash.showOnRebuild) {
-          ConditionPathExists = "%t/ojuny-login-splash.started";
-        };
-        serviceConfig = {
-          Type = "simple";
-          ExecStart = "${loginSplashReady}";
-          Restart = "no";
-        };
-      };
-
       systemd.user.targets.graphical-session.unitConfig = {
         StopWhenUnneeded = lib.mkForce false;
         RefuseManualStart = lib.mkForce false;
@@ -336,7 +316,7 @@
         userWallpapers = wallpaperSet.userWallpapers;
       };
 
-      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap ojuny.configLinker loginSplash ] ++ cfg.defaultApps;
+      environment.systemPackages = [ ojuny.mangoWrapper ojuny.snap ojuny.configLinker splashQuit loginSplash ] ++ cfg.defaultApps;
 
       environment.etc."ojuny/snap.conf".source = snapConfigFile;
 
